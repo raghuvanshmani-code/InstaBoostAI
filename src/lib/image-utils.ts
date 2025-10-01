@@ -1,7 +1,8 @@
 import imageCompression from 'browser-image-compression';
 
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 50; // Increased limit
 const MAX_IMAGE_WIDTH = 1080;
+const COMPRESSION_TARGET_MB = 1;
 const SUPPORTED_FORMATS = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
 /**
@@ -26,23 +27,27 @@ export function validateImage(file: File): string | null {
  */
 export async function processImageForUpload(file: File): Promise<File> {
   const options = {
-    maxSizeMB: 1, // Compress to a file size of 1MB
+    maxSizeMB: COMPRESSION_TARGET_MB,
     maxWidthOrHeight: MAX_IMAGE_WIDTH,
     useWebWorker: true,
   };
 
   try {
-    // Only compress if the file is larger than the target size or needs resizing.
-    // The library is smart, but this check avoids unnecessary processing for small images.
-    if (file.size > options.maxSizeMB * 1024 * 1024 || !file.type.startsWith('image/gif')) {
+    // Only compress if the file is larger than the target size or not a GIF.
+    // The library is smart, but this check can avoid unnecessary processing.
+    const needsCompression = file.size > options.maxSizeMB * 1024 * 1024;
+    const isAnimatedGif = file.type === 'image/gif';
+
+    if (needsCompression && !isAnimatedGif) {
         const compressedFile = await imageCompression(file, options);
         return compressedFile;
     }
+    
+    // Return original file if it doesn't need compression or is a GIF
     return file;
   } catch (error) {
     console.error('Image compression error:', error);
-    // If compression fails, return the original file but warn the user.
-    // This could happen with corrupted files.
-    throw new Error('Could not process the image. It might be corrupted.');
+    // If compression fails, throw a specific error to be caught by the UI.
+    throw new Error('Could not process the image. It might be corrupted or in an unsupported format.');
   }
 }

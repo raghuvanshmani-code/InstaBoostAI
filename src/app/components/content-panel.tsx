@@ -128,7 +128,7 @@ export default function ContentPanel({
       } catch (error: any) {
         toast({
           title: 'Image Processing Error',
-          description: error.message || 'Could not read the image file. Please try another image.',
+          description: error.message || 'Could not read the image file. Please try another one.',
           variant: 'destructive',
         });
         return;
@@ -167,7 +167,7 @@ export default function ContentPanel({
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
-  onDrop={handleDrop}
+          onDrop={handleDrop}
         >
           {isLoading ? (
             <div className="flex flex-col items-center gap-4 text-center">
