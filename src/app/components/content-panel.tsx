@@ -2,9 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Image as ImageIcon, Loader2, Upload } from 'lucide-react';
+import { Image as ImageIcon, Loader2, Upload, FileUp } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -12,8 +11,6 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 type ContentPanelProps = {
   imagePreview: string | null;
   onFileChange: (file: File | null) => void;
-  location: string;
-  setLocation: (value: string) => void;
   onGenerate: () => void;
   isLoading: boolean;
 };
@@ -21,8 +18,6 @@ type ContentPanelProps = {
 export default function ContentPanel({
   imagePreview,
   onFileChange,
-  location,
-  setLocation,
   onGenerate,
   isLoading,
 }: ContentPanelProps) {
@@ -66,49 +61,52 @@ export default function ContentPanel({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <ImageIcon className="text-primary" />
-          Your Content
+          Content
         </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="content-upload">Upload Image/Video</Label>
-          <div
-            className={cn(
-              'relative flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border transition-colors',
-              isDragging ? 'border-primary bg-primary/10' : 'hover:border-primary/50 hover:bg-muted'
-            )}
-            onClick={handleFileSelect}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            {imagePreview ? (
+        <div
+          className={cn(
+            'relative group flex aspect-video w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border transition-colors',
+            isDragging ? 'border-primary bg-primary/10' : 'hover:border-primary/50'
+          )}
+          onClick={handleFileSelect}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          {imagePreview ? (
+            <>
               <Image
                 src={imagePreview}
                 alt="Content preview"
                 fill
-                className="object-contain rounded-md"
+                className="object-contain rounded-md transition-opacity group-hover:opacity-20"
                 data-ai-hint={placeholderImage?.imageHint}
               />
-            ) : (
-              <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
-                <Upload className="h-10 w-10" />
-                <div>
-                  <p className="font-semibold">Click to upload or drag and drop</p>
-                  <p className="text-sm">SVG, PNG, JPG or GIF (max. 800x400px)</p>
-                </div>
+              <div className="flex flex-col items-center gap-2 text-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                <FileUp className="h-10 w-10" />
+                <p className="font-semibold text-lg">Change Image</p>
               </div>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              id="content-upload"
-              className="hidden"
-              accept="image/*,video/*"
-              onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
-            />
-          </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
+              <Upload className="h-12 w-12" />
+              <div>
+                <p className="font-semibold text-lg">Click to upload or drag and drop</p>
+                <p className="text-sm">SVG, PNG, JPG or GIF</p>
+              </div>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            id="content-upload"
+            className="hidden"
+            accept="image/*,video/*"
+            onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
+          />
         </div>
         <Button onClick={onGenerate} disabled={isLoading} size="lg" className="w-full">
           {isLoading ? (
