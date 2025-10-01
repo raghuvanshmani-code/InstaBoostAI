@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Upload } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -10,7 +9,6 @@ import type { ImagePlaceholder } from '@/lib/placeholder-images';
 
 type ContentPanelProps = {
   onFileChange: (file: File | null) => void;
-  onGenerate: () => void;
   isLoading: boolean;
   onSampleClick: (imageUrl: string) => void;
   sampleImages: ImagePlaceholder[];
@@ -18,6 +16,7 @@ type ContentPanelProps = {
 
 export default function ContentPanel({
   onFileChange,
+  isLoading,
   onSampleClick,
   sampleImages
 }: ContentPanelProps) {
@@ -25,12 +24,14 @@ export default function ContentPanel({
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFileSelect = () => {
+    if (isLoading) return;
     fileInputRef.current?.click();
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isLoading) return;
     setIsDragging(true);
   };
 
@@ -48,6 +49,7 @@ export default function ContentPanel({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isLoading) return;
     setIsDragging(false);
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
@@ -60,8 +62,9 @@ export default function ContentPanel({
       <CardContent className="p-6">
         <div
           className={cn(
-            'relative group flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-background transition-colors',
-            isDragging ? 'border-primary bg-primary/10' : 'hover:border-primary/50'
+            'relative group flex h-64 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-background transition-colors',
+            isDragging ? 'border-primary bg-primary/10' : 'hover:border-primary/50',
+            isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
           )}
           onClick={handleFileSelect}
           onDragEnter={handleDragEnter}
@@ -69,13 +72,24 @@ export default function ContentPanel({
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
-            <Upload className="h-12 w-12" />
-            <div>
-              <p className="font-semibold text-lg text-foreground">Click to upload or drag and drop</p>
-              <p className="text-sm">SVG, PNG, JPG or GIF</p>
+          {isLoading ? (
+            <div className="flex flex-col items-center gap-4 text-center">
+                <svg className="animate-spin -ml-1 mr-3 h-10 w-10 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p className="font-semibold text-lg text-foreground">Generating ideas...</p>
+                <p className="text-sm text-muted-foreground">Please wait a moment.</p>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
+              <Upload className="h-12 w-12" />
+              <div>
+                <p className="font-semibold text-lg text-foreground">Click to upload or drag and drop</p>
+                <p className="text-sm">SVG, PNG, JPG or GIF</p>
+              </div>
+            </div>
+          )}
           <input
             ref={fileInputRef}
             type="file"
@@ -83,6 +97,7 @@ export default function ContentPanel({
             className="hidden"
             accept="image/*"
             onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
+            disabled={isLoading}
           />
         </div>
         <div className="mt-6">
@@ -91,8 +106,9 @@ export default function ContentPanel({
               {sampleImages.map((sample) => (
                 <button
                   key={sample.id}
-                  className="relative aspect-square w-full rounded-md overflow-hidden group/sample"
+                  className="relative aspect-square w-full rounded-md overflow-hidden group/sample disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() => onSampleClick(sample.imageUrl)}
+                  disabled={isLoading}
                 >
                   <Image
                     src={sample.imageUrl}

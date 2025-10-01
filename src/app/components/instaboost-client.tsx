@@ -31,6 +31,7 @@ export default function InstaBoostClient() {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
       setResults(null);
+      handleGenerate(file);
     } else {
       setImageFile(null);
       setImagePreview(null);
@@ -104,7 +105,6 @@ export default function InstaBoostClient() {
       const blob = await response.blob();
       const file = new File([blob], "sample-image.jpg", { type: blob.type });
       handleFileChange(file);
-      handleGenerate(file);
     } catch (error) {
       toast({
         title: "Failed to load sample",
@@ -114,18 +114,19 @@ export default function InstaBoostClient() {
     }
   };
 
+  const showResults = imagePreview && (results || isPending);
+
   return (
     <div className="w-full">
-      {!imagePreview && !results && !isPending ? (
+      {showResults ? (
+        <ResultsPanel results={results} isLoading={isPending} imagePreview={imagePreview} />
+      ) : (
          <ContentPanel
           onFileChange={handleFileChange}
-          onGenerate={() => handleGenerate()}
           isLoading={isPending}
           onSampleClick={handleSampleImageClick}
           sampleImages={sampleImages}
         />
-      ) : (
-        <ResultsPanel results={results} isLoading={isPending} imagePreview={imagePreview} />
       )}
     </div>
   );
