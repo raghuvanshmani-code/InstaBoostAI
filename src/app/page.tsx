@@ -92,9 +92,6 @@ export default function Home() {
   const handleGenerateClick = () => {
     if (imageFile) {
       handleGenerate(imageFile);
-    } else if (imagePreview) {
-        // This handles the case where a sample image was clicked
-        handleSampleImageClick(imagePreview, true);
     } else {
       toast({
         title: 'No Image Selected',
@@ -138,7 +135,7 @@ export default function Home() {
     });
   };
 
-  const handleSampleImageClick = async (imageUrl: string, generate: boolean = false) => {
+  const handleSampleImageClick = async (imageUrl: string) => {
     try {
       // Set preview immediately
       setImagePreview(imageUrl);
@@ -150,10 +147,6 @@ export default function Home() {
       
       setImageFile(file);
 
-      if(generate) {
-        handleGenerate(file);
-      }
-      
     } catch (error) {
       toast({
         title: "Failed to load sample",
