@@ -21,23 +21,25 @@ export default function InstaBoostClient() {
   const { toast } = useToast();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const placeholderImage = PlaceHolderImages.find(img => img.id === 'uploader-placeholder');
-  const [imagePreview, setImagePreview] = useState<string | null>(placeholderImage?.imageUrl || null);
-  const [location, setLocation] = useState<string>('');
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [results, setResults] = useState<AIResults | null>(null);
+
+  const sampleImages = PlaceHolderImages.filter(p => p.id.startsWith('sample-'));
 
   const handleFileChange = (file: File | null) => {
     if (file) {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
+      setResults(null);
     } else {
       setImageFile(null);
-      setImagePreview(placeholderImage?.imageUrl || null);
+      setImagePreview(null);
     }
   };
 
-  const handleGenerate = async () => {
-    if (!imageFile) {
+  const handleGenerate = async (file?: File) => {
+    const currentFile = file || imageFile;
+    if (!currentFile) {
       toast({
         title: 'Input Missing',
         description: 'Please provide an image for your content.',
@@ -46,21 +48,29 @@ export default function InstaBoostClient() {
       return;
     }
 
+    if (!imagePreview && !file) {
+      setImagePreview(URL.createObjectURL(currentFile));
+    }
+    
+    if (file && !imageFile) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+
+
     setResults(null);
 
     startTransition(async () => {
       let imageUri: string | undefined = undefined;
-      if (imageFile) {
-        try {
-          imageUri = await toDataURL(imageFile);
-        } catch (error) {
-          toast({
-            title: 'Image Processing Error',
-            description: 'Could not read the image file. Please try another image.',
-            variant: 'destructive',
-          });
-          return;
-        }
+      try {
+        imageUri = await toDataURL(currentFile);
+      } catch (error) {
+        toast({
+          title: 'Image Processing Error',
+          description: 'Could not read the image file. Please try another image.',
+          variant: 'destructive',
+        });
+        return;
       }
 
       if (!imageUri) {
@@ -88,19 +98,35 @@ export default function InstaBoostClient() {
     });
   };
 
+  const handleSampleImageClick = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "sample-image.jpg", { type: blob.type });
+      handleFileChange(file);
+      handleGenerate(file);
+    } catch (error) {
+      toast({
+        title: "Failed to load sample",
+        description: "There was an issue loading the sample image.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <div className="mx-auto w-full max-w-screen-2xl p-4 sm:p-6 lg:p-8">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-        <ContentPanel
-          imagePreview={imagePreview}
+    <div className="w-full">
+      {!imagePreview && !results && !isPending ? (
+         <ContentPanel
           onFileChange={handleFileChange}
-          location={location}
-          setLocation={setLocation}
-          onGenerate={handleGenerate}
+          onGenerate={() => handleGenerate()}
           isLoading={isPending}
+          onSampleClick={handleSampleImageClick}
+          sampleImages={sampleImages}
         />
-        <ResultsPanel results={results} isLoading={isPending} />
-      </div>
+      ) : (
+        <ResultsPanel results={results} isLoading={isPending} imagePreview={imagePreview} />
+      )}
     </div>
   );
 }
