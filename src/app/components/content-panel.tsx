@@ -92,9 +92,12 @@ export default function ContentPanel({
                 data-ai-hint={placeholderImage?.imageHint}
               />
             ) : (
-              <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                <Upload className="h-8 w-8" />
-                <p className="text-sm">write some text here to specify the upload</p>
+              <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
+                <Upload className="h-10 w-10" />
+                <div>
+                  <p className="font-semibold">Click to upload or drag and drop</p>
+                  <p className="text-sm">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+                </div>
               </div>
             )}
             <input
