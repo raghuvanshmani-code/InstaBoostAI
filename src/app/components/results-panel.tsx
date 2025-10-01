@@ -208,7 +208,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                   <Card className="h-full flex flex-col">
                     <CardHeader>
                       <div className="flex justify-between items-start">
-                        <CardTitle>Image Analysis</CardTitle>
+                        <CardTitle>Description</CardTitle>
                         <CopyButton textToCopy={results.description} />
                       </div>
                     </CardHeader>
