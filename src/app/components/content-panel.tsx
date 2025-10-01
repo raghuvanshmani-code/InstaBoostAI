@@ -3,7 +3,7 @@
 
 import { useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { BrainCircuit, Languages, Smile, Upload } from 'lucide-react';
+import { BrainCircuit, Languages, Smile, Upload, WandSparkles } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 type ContentPanelProps = {
   onFileChange: (file: File | null) => void;
@@ -28,6 +29,8 @@ type ContentPanelProps = {
   onMoodChange: (mood: string) => void;
   customInstructions: string;
   onCustomInstructionsChange: (instructions: string) => void;
+  onGenerateClick: () => void;
+  imageSelected: boolean;
 };
 
 export default function ContentPanel({
@@ -40,7 +43,9 @@ export default function ContentPanel({
   mood,
   onMoodChange,
   customInstructions,
-  onCustomInstructionsChange
+  onCustomInstructionsChange,
+  onGenerateClick,
+  imageSelected,
 }: ContentPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -174,6 +179,16 @@ export default function ContentPanel({
             </div>
           </div>
         </div>
+
+        <Button
+            onClick={onGenerateClick}
+            disabled={isLoading || !imageSelected}
+            size="lg"
+            className="w-full text-lg"
+        >
+            <WandSparkles className="mr-2 h-5 w-5" />
+            Generate
+        </Button>
 
         <div>
             <p className="text-sm font-medium text-muted-foreground mb-3 text-center">Or try with a sample image:</p>

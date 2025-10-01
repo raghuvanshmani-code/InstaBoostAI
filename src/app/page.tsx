@@ -83,10 +83,24 @@ export default function Home() {
       const preview = URL.createObjectURL(file);
       setImagePreview(preview);
       setResults(null);
-      handleGenerate(file);
     } else {
       setImageFile(null);
       setImagePreview(null);
+    }
+  };
+  
+  const handleGenerateClick = () => {
+    if (imageFile) {
+      handleGenerate(imageFile);
+    } else if (imagePreview) {
+        // This handles the case where a sample image was clicked
+        handleSampleImageClick(imagePreview, true);
+    } else {
+      toast({
+        title: 'No Image Selected',
+        description: 'Please select an image before generating content.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -124,12 +138,22 @@ export default function Home() {
     });
   };
 
-  const handleSampleImageClick = async (imageUrl: string) => {
+  const handleSampleImageClick = async (imageUrl: string, generate: boolean = false) => {
     try {
+      // Set preview immediately
+      setImagePreview(imageUrl);
+      setResults(null);
+      
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const file = new File([blob], "sample-image.jpg", { type: blob.type });
-      handleFileChange(file);
+      
+      setImageFile(file);
+
+      if(generate) {
+        handleGenerate(file);
+      }
+      
     } catch (error) {
       toast({
         title: "Failed to load sample",
@@ -202,6 +226,8 @@ export default function Home() {
                     onMoodChange={setMood}
                     customInstructions={customInstructions}
                     onCustomInstructionsChange={setCustomInstructions}
+                    onGenerateClick={handleGenerateClick}
+                    imageSelected={!!imagePreview}
                   />
                 </div>
               </div>
