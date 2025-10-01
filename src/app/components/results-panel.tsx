@@ -9,12 +9,13 @@ import {
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Hash, MessageSquareQuote } from 'lucide-react';
-import { CopyButton } from './copy-button';
-import Image from 'next/image';
+import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FileText, Hash, MessageSquareQuote, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { CopyButton } from './copy-button';
 
 export type AIResults = {
   description: string;
@@ -35,6 +36,43 @@ const ShimmerSkeleton = () => (
   </div>
 );
 
+const LoadingIndicator = () => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 95;
+        }
+        return prev + 5;
+      });
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="w-full aspect-square rounded-lg shadow-lg bg-card border flex flex-col items-center justify-center p-8 gap-6">
+      <div className="flex items-center gap-4">
+        <Sparkles className="h-8 w-8 text-primary animate-pulse" />
+        <h2 className="text-2xl font-semibold text-foreground">
+          Generating Ideas...
+        </h2>
+      </div>
+      <p className="text-muted-foreground text-center">
+        Our AI is crafting the perfect content for your image. This might take a few moments.
+      </p>
+      <div className="w-full max-w-md mt-4">
+        <Progress value={progress} className="h-2" />
+        <p className="text-sm text-center text-muted-foreground mt-2">{Math.round(progress)}%</p>
+      </div>
+    </div>
+  );
+};
+
+
 export default function ResultsPanel({ results, isLoading, imagePreview }: ResultsPanelProps) {
   if (isLoading || !results) {
     return (
@@ -46,9 +84,8 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
             <ShimmerSkeleton />
           )}
         </div>
-        <div className="space-y-4 w-full">
-            <div className="h-12 w-full rounded-lg relative overflow-hidden bg-muted"><div className="shimmer-gradient absolute inset-0" /></div>
-            <div className="w-full h-full rounded-lg relative overflow-hidden bg-muted"><div className="shimmer-gradient absolute inset-0" /></div>
+        <div className="w-full">
+            <LoadingIndicator />
         </div>
       </div>
     );
