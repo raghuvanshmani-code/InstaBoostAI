@@ -151,17 +151,19 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                     </CardHeader>
                     <CardContent className="flex-grow overflow-hidden">
                         <ScrollArea className="h-full pr-4">
-                            <div className="flex flex-wrap gap-4 mb-6">
+                            <div className="flex flex-wrap gap-3 mb-6">
                                 {results.hashtags.map((hashtag, index) => (
-                                <div key={index} className="flex flex-col items-center gap-1.5">
-                                    <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
-                                        {hashtag.tag}
-                                    </Badge>
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                      <TrendingUp className="h-3 w-3" />
-                                      <span>{hashtag.reach}% Reach</span>
-                                    </div>
-                                </div>
+                                <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-sm font-medium px-4 py-2 flex items-center gap-2"
+                                >
+                                    <span>{hashtag.tag}</span>
+                                    <span className="flex items-center gap-1 text-primary font-bold">
+                                        <TrendingUp className="h-4 w-4" />
+                                        {hashtag.reach}%
+                                    </span>
+                                </Badge>
                                 ))}
                             </div>
                             <Accordion type="single" collapsible>
