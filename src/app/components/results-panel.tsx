@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -30,8 +31,8 @@ type ResultsPanelProps = {
 export default function ResultsPanel({ results, isLoading, imagePreview }: ResultsPanelProps) {
   if (isLoading || !results) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div className="w-full aspect-video rounded-lg overflow-hidden relative shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto items-center">
+        <div className="w-full aspect-square rounded-lg overflow-hidden relative shadow-lg">
           {imagePreview ? (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
           ) : (
@@ -55,8 +56,8 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
   const allHashtags = results.hashtags.join(' ');
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div className="w-full aspect-video rounded-lg overflow-hidden relative shadow-lg">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto items-center">
+        <div className="w-full aspect-square rounded-lg overflow-hidden relative shadow-lg">
           {imagePreview && (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
           )}
