@@ -3,7 +3,7 @@
 
 import { useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { BrainCircuit, Languages, Smile, Upload, WandSparkles } from 'lucide-react';
+import { BrainCircuit, CheckCircle, Languages, Smile, Upload, WandSparkles } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
@@ -31,6 +31,7 @@ type ContentPanelProps = {
   onCustomInstructionsChange: (instructions: string) => void;
   onGenerateClick: () => void;
   imageSelected: boolean;
+  imagePreview: string | null;
 };
 
 export default function ContentPanel({
@@ -46,6 +47,7 @@ export default function ContentPanel({
   onCustomInstructionsChange,
   onGenerateClick,
   imageSelected,
+  imagePreview,
 }: ContentPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -104,6 +106,15 @@ export default function ContentPanel({
                 <div className="h-12 w-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
                 <p className="font-semibold text-lg text-foreground">Generating ideas...</p>
                 <p className="text-sm text-muted-foreground">Please wait a moment.</p>
+            </div>
+          ) : imagePreview && imageSelected ? (
+             <div className='relative w-full h-full'>
+                <Image src={imagePreview} alt="Selected preview" fill className="object-contain rounded-lg" />
+                 <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <CheckCircle className="h-12 w-12 text-white" />
+                    <p className="text-white font-semibold mt-2">Image Selected</p>
+                    <p className="text-white/80 text-sm">Click to change</p>
+                </div>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">

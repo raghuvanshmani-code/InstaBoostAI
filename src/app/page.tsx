@@ -228,6 +228,7 @@ export default function Home() {
                     onCustomInstructionsChange={setCustomInstructions}
                     onGenerateClick={handleGenerateClick}
                     imageSelected={!!imagePreview}
+                    imagePreview={imagePreview}
                   />
                 </div>
               </div>
