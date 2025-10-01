@@ -67,16 +67,16 @@ const testimonials = [
 
 const sampleOutput = {
   captions: [
-    "Diving into a world of color and creativity. 🎨 What does this image make you feel?",
-    "Where art and imagination collide. Loving these vibrant vibes! ✨",
-    "Letting the colors do the talking. Sometimes, the best creations are the most abstract. 🌈",
+    "Caught in the golden hour glow. ✨ A little bit of liner, a lot of sunshine.",
+    "That quiet moment just before the sun sets. Finding beauty in the stillness. 🌿",
+    "Letting the light paint the picture. What's one small detail that made you happy today?",
   ],
   hashtags: [
-    { tag: '#CreativeEnergy', reach: 80 },
-    { tag: '#AbstractArt', reach: 85 },
-    { tag: '#ColorTherapy', reach: 70 },
-    { tag: '#DigitalArtwork', reach: 75 },
-    { tag: '#VibrantVibes', reach: 65 },
+    { tag: '#GoldenHour', reach: 88 },
+    { tag: '#PortraitMood', reach: 82 },
+    { tag: '#Ethereal', reach: 75 },
+    { tag: '#GraphicLiner', reach: 70 },
+    { tag: '#SoftGlow', reach: 68 },
   ]
 };
 
