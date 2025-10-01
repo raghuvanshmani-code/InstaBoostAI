@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Bot, BrainCircuit, Sparkles, TrendingUp, UserCheck } from 'lucide-react';
+import { Bot, BrainCircuit, Sparkles, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import ContentPanel from '@/app/components/content-panel';
 import ResultsPanel from '@/app/components/results-panel';
@@ -11,7 +11,7 @@ import { generateAllSuggestions } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const toDataURL = (file: File): Promise<string> =>
@@ -212,7 +212,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="w-full bg-secondary/50 py-12 md:py-24">
+            <section className="w-full bg-background py-12 md:py-24">
                 <div className="container mx-auto px-4">
                      <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Loved by Creators Worldwide</h2>
@@ -220,7 +220,7 @@ export default function Home() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {testimonials.map((testimonial, index) => (
-                            <Card key={index} className="bg-background shadow-lg">
+                            <Card key={index} className="bg-card shadow-lg">
                                 <CardContent className="pt-6">
                                     <p className="text-muted-foreground italic">"{testimonial.comment}"</p>
                                     <div className="flex items-center gap-4 mt-6">
@@ -250,3 +250,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
