@@ -199,6 +199,11 @@ export default function ContentPanel({
             Generate
         </Button>
 
+        <div className="text-center text-xs text-muted-foreground">
+          <p>We respect your privacy. Images are automatically deleted after 24 hours.</p>
+          <a href="#" className="underline hover:text-primary">Learn more</a>
+        </div>
+
         <div>
             <p className="text-sm font-medium text-muted-foreground mb-3 text-center">Or try with a sample image:</p>
             <div className="grid grid-cols-3 gap-3">
