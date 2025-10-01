@@ -23,28 +23,53 @@ export type SuggestRelevantHashtagsInput = z.infer<
 >;
 
 const StrategyPointSchema = z.object({
-  point: z.string().describe('A concise, research-backed bullet point for the strategic value of the chosen tags.'),
-  source: z.string().describe('The reputable source for the point (e.g., "Hootsuite, 2024").'),
+  point: z
+    .string()
+    .describe(
+      'A concise, research-backed bullet point for the strategic value of the chosen tags.'
+    ),
+  source: z
+    .string()
+    .describe('The reputable source for the point (e.g., "Hootsuite, 2024").'),
 });
 
 const HashtagStrategySchema = z.object({
-  title: z.string().describe('The title of the strategy (e.g., "High-Volume Strategy").'),
+  title: z
+    .string()
+    .describe('The title of the strategy (e.g., "High-Volume Strategy").'),
   description: z.string().describe('A brief description of the strategy.'),
-  estimatedReach: z.number().describe('The estimated reach increase as a percentage (e.g., 40 for +40%).'),
-  points: z.array(StrategyPointSchema).describe('An array of strategic points backing the strategy.'),
+  estimatedReach: z
+    .number()
+    .describe(
+      'The estimated reach increase as a percentage (e.g., 40 for +40%).'
+    ),
+  points: z
+    .array(StrategyPointSchema)
+    .describe('An array of strategic points backing the strategy.'),
+});
+
+const HashtagWithReachSchema = z.object({
+  tag: z.string().describe('The hashtag, including the # symbol.'),
+  reach: z
+    .number()
+    .describe(
+      'Estimated potential reach score for the hashtag, from 0 to 100.'
+    ),
 });
 
 const SuggestRelevantHashtagsOutputSchema = z.object({
   hashtags: z
-    .array(z.string())
+    .array(HashtagWithReachSchema)
     .describe(
-      'An array of relevant and trending hashtags that balance broad and niche appeal to optimize reach.'
+      'An array of relevant and trending hashtags, each with an estimated reach score, to optimize reach.'
     ),
-  reasoning: z.object({
+  reasoning: z
+    .object({
       highVolume: HashtagStrategySchema,
       niche: HashtagStrategySchema,
       trending: HashtagStrategySchema,
-  }).describe('An object containing the reasoning for each hashtag strategy.'),
+    })
+    .describe('An object containing the reasoning for each hashtag strategy.'),
 });
 export type SuggestRelevantHashtagsOutput = z.infer<
   typeof SuggestRelevantHashtagsOutputSchema
@@ -64,6 +89,10 @@ const prompt = ai.definePrompt({
 
   Given the content description below, provide a meticulously curated list of hashtags and a structured analysis of your strategy.
 
+  For the hashtags, provide an array of objects, where each object has:
+  - A "tag" string: The hashtag itself (e.g., "#digitalart").
+  - A "reach" number: An estimated potential reach score from 0 to 100, based on its current popularity and relevance.
+
   Your strategy should include three parts:
   1.  **High-Volume Hashtags:** 2-3 popular hashtags to tap into broad trends.
   2.  **Niche-Specific Hashtags:** 5-7 hashtags that are highly relevant to the subject matter, targeting a specific community.
@@ -79,7 +108,7 @@ const prompt = ai.definePrompt({
     - A "point" string: A concise, research-backed bullet point on the strategic value.
     - A "source" string: The reputable source and year (e.g., "Hootsuite, 2024").
 
-  Format the final output as a single JSON object with "hashtags" (an array of strings) and "reasoning" (a structured object) fields. Do not add any extra commentary.`,
+  Format the final output as a single JSON object with "hashtags" (an array of objects) and "reasoning" (a structured object) fields. Do not add any extra commentary.`,
 });
 
 const suggestRelevantHashtagsFlow = ai.defineFlow(

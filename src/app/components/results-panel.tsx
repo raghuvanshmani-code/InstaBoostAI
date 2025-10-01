@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Hash, MessageSquareQuote, Sparkles } from 'lucide-react';
+import { FileText, Hash, MessageSquareQuote, Sparkles, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { CopyButton } from './copy-button';
@@ -23,7 +23,7 @@ import { HashtagReasoning, type HashtagReasoningData } from './hashtag-reasoning
 export type AIResults = {
   description: string;
   captions: string[];
-  hashtags: string[];
+  hashtags: { tag: string; reach: number }[];
   hashtagReasoning: HashtagReasoningData;
 };
 
@@ -94,7 +94,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
     );
   }
 
-  const allHashtags = results.hashtags.join(' ');
+  const allHashtags = results.hashtags.map(h => h.tag).join(' ');
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto">
@@ -149,11 +149,17 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                     </CardHeader>
                     <CardContent className="flex-grow overflow-hidden">
                         <ScrollArea className="h-full pr-4">
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {results.hashtags.map((tag, index) => (
-                                <Badge key={index} variant="secondary" className="text-sm font-medium px-3 py-1">
-                                    {tag}
-                                </Badge>
+                            <div className="flex flex-wrap gap-3 mb-6">
+                                {results.hashtags.map((hashtag, index) => (
+                                <div key={index} className="flex flex-col items-center gap-1">
+                                    <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
+                                        {hashtag.tag}
+                                    </Badge>
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                      <TrendingUp className="h-3 w-3" />
+                                      <span>{hashtag.reach}% Reach</span>
+                                    </div>
+                                </div>
                                 ))}
                             </div>
                             <Accordion type="single" collapsible>
