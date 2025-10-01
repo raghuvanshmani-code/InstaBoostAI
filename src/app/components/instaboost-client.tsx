@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -28,8 +29,8 @@ export default function InstaBoostClient() {
 
   const handleFileChange = (file: File | null) => {
     if (file) {
-      setImageFile(file);
       const preview = URL.createObjectURL(file);
+      setImageFile(file);
       setImagePreview(preview);
       setResults(null);
       handleGenerate(file, preview);
@@ -39,46 +40,18 @@ export default function InstaBoostClient() {
     }
   };
 
-  const handleGenerate = async (file?: File, preview?: string) => {
-    const currentFile = file || imageFile;
-    if (!currentFile) {
-      toast({
-        title: 'Input Missing',
-        description: 'Please provide an image for your content.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (preview && !imagePreview) {
-      setImagePreview(preview);
-    }
-    
-    if (file && !imageFile) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
-
-
+  const handleGenerate = async (file: File, preview: string) => {
+    setImagePreview(preview);
     setResults(null);
 
     startTransition(async () => {
-      let imageUri: string | undefined = undefined;
+      let imageUri: string;
       try {
-        imageUri = await toDataURL(currentFile);
+        imageUri = await toDataURL(file);
       } catch (error) {
         toast({
           title: 'Image Processing Error',
           description: 'Could not read the image file. Please try another image.',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      if (!imageUri) {
-        toast({
-          title: 'Image Processing Error',
-          description: 'Could not process the image. Please try another one.',
           variant: 'destructive',
         });
         return;
