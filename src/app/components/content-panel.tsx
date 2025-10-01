@@ -94,7 +94,7 @@ export default function ContentPanel({
             ) : (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Upload className="h-8 w-8" />
-                <p className="text-sm">Drag & drop or click to upload</p>
+                <p className="text-sm">write some text here to specify the upload</p>
               </div>
             )}
             <input
