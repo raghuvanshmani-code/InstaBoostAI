@@ -156,7 +156,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="reasoning">
                                 <AccordionTrigger>Why these hashtags?</AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground">
+                                <AccordionContent className="text-muted-foreground whitespace-pre-wrap">
                                     {results.hashtagReasoning}
                                 </AccordionContent>
                                 </AccordionItem>

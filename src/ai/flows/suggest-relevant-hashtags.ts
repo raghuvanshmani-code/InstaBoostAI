@@ -31,7 +31,7 @@ const SuggestRelevantHashtagsOutputSchema = z.object({
   reasoning: z
     .string()
     .describe(
-      'Explanation of the reasoning of why these hashtags were selected, presented as bullet points with citations.'
+      'Explanation of the reasoning of why these hashtags were selected, presented in a structured format with citations.'
     ),
 });
 export type SuggestRelevantHashtagsOutput = z.infer<
@@ -57,16 +57,20 @@ const prompt = ai.definePrompt({
 
   Content Description: {{{contentDescription}}}
 
-  You must provide a "reasoning" for your selection as a series of concise bullet points. Each point should explain the strategic value of the hashtag choices, referencing how they align with current Instagram best practices for discoverability. Your tone should be that of a serious SEO expert.
-
-  - Each bullet point must be research-based and impressive.
-  - After each point, you MUST provide a citation from a reputable source (e.g., Later, Hootsuite, Sprout Social, or academic marketing journals). Format citations as "(Source: [Source Name], [Year])".
+  You must provide a "reasoning" for your selection. The reasoning should be formatted as a string with clear headings for each hashtag category (High-Volume, Niche-Specific, Emerging/Trending). Under each heading, provide a concise, research-backed bullet point for the strategic value of the chosen tags. Include estimated reach increase percentages and cite a reputable source for each point.
 
   Example reasoning format:
-  *   "Combining high-volume tags like #travelphotography with niche tags like #icelandichorse creates a 'topic cluster' effect, improving visibility in both broad discovery feeds and specific interest groups. (Source: Hootsuite, 2023)"
-  *   "The use of #adventuretravel taps into a community-driven hashtag with high engagement rates, fostering a sense of belonging and encouraging user interaction. (Source: Sprout Social, 2024)"
 
-  Format the final output as a JSON object with "hashtags" and "reasoning" fields.`,
+  **High-Volume Strategy (Est. Reach: +30-40%)**
+  *   Using tags like #travelphotography taps into a massive discovery pool. (Source: Hootsuite, 2024)
+
+  **Niche-Specific Strategy (Est. Engagement: +50-70%)**
+  *   Tags like #icelandichorse build a 'topic cluster,' signaling expertise and attracting a dedicated community. (Source: Sprout Social, 2023)
+
+  **Trending Strategy (Est. Virality Chance: +15%)**
+  *   Capitalizing on #solarpunkfuture taps into a growing aesthetic and conversation, increasing chances of being featured. (Source: Later, 2024)
+
+  Format the final output as a JSON object with "hashtags" (an array of strings) and "reasoning" (a single formatted string) fields.`,
 });
 
 const suggestRelevantHashtagsFlow = ai.defineFlow(
