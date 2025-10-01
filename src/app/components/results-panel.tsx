@@ -30,8 +30,8 @@ type ResultsPanelProps = {
 export default function ResultsPanel({ results, isLoading, imagePreview }: ResultsPanelProps) {
   if (isLoading || !results) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="w-full aspect-video rounded-lg overflow-hidden relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="w-full aspect-video rounded-lg overflow-hidden relative shadow-lg">
           {imagePreview ? (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
           ) : (
@@ -64,16 +64,16 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
         <div className="h-full">
           <Tabs defaultValue="captions" className="w-full">
             <TabsList className="grid w-full grid-cols-3 h-12">
-              <TabsTrigger value="captions" className="text-base">
-                <MessageSquareQuote className="mr-2" />
+              <TabsTrigger value="captions" className="text-base gap-2">
+                <MessageSquareQuote />
                 Captions
               </TabsTrigger>
-              <TabsTrigger value="hashtags" className="text-base">
-                <Hash className="mr-2" />
+              <TabsTrigger value="hashtags" className="text-base gap-2">
+                <Hash />
                 Hashtags
               </TabsTrigger>
-              <TabsTrigger value="description" className="text-base">
-                <FileText className="mr-2" />
+              <TabsTrigger value="description" className="text-base gap-2">
+                <FileText />
                 Description
               </TabsTrigger>
             </TabsList>

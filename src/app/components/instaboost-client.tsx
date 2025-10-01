@@ -29,16 +29,17 @@ export default function InstaBoostClient() {
   const handleFileChange = (file: File | null) => {
     if (file) {
       setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+      const preview = URL.createObjectURL(file);
+      setImagePreview(preview);
       setResults(null);
-      handleGenerate(file);
+      handleGenerate(file, preview);
     } else {
       setImageFile(null);
       setImagePreview(null);
     }
   };
 
-  const handleGenerate = async (file?: File) => {
+  const handleGenerate = async (file?: File, preview?: string) => {
     const currentFile = file || imageFile;
     if (!currentFile) {
       toast({
@@ -49,8 +50,8 @@ export default function InstaBoostClient() {
       return;
     }
 
-    if (!imagePreview && !file) {
-      setImagePreview(URL.createObjectURL(currentFile));
+    if (preview && !imagePreview) {
+      setImagePreview(preview);
     }
     
     if (file && !imageFile) {
@@ -93,6 +94,7 @@ export default function InstaBoostClient() {
           description: response.error,
           variant: 'destructive',
         });
+        setResults(null);
       } else if (response.data) {
         setResults(response.data);
       }
@@ -114,7 +116,7 @@ export default function InstaBoostClient() {
     }
   };
 
-  const showResults = imagePreview && (results || isPending);
+  const showResults = imagePreview && results && !isPending;
 
   return (
     <div className="w-full">
