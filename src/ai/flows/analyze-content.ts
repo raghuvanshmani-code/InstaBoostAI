@@ -21,7 +21,7 @@ const AnalyzeContentInputSchema = z.object({
 export type AnalyzeContentInput = z.infer<typeof AnalyzeContentInputSchema>;
 
 const AnalyzeContentOutputSchema = z.object({
-  description: z.string().describe('A detailed analysis of the image content, objects, and themes.'),
+  description: z.string().describe('A detailed analysis of the image content, objects, and themes, written from the perspective of the person who uploaded the image.'),
 });
 export type AnalyzeContentOutput = z.infer<typeof AnalyzeContentOutputSchema>;
 
@@ -35,11 +35,15 @@ const prompt = ai.definePrompt({
   name: 'analyzeContentPrompt',
   input: {schema: AnalyzeContentInputSchema},
   output: {schema: AnalyzeContentOutputSchema},
-  prompt: `You are an expert at analyzing images. Analyze the given image to understand its context, objects, and themes. Provide a detailed description of what you see.
+  prompt: `You are an expert at analyzing images and writing compelling descriptions from the perspective of the uploader.
 
-  Image: {{media url=imageUri}}
-  
-  Format the output as a JSON object with a "description" field.`,
+Analyze the given image to understand its context, objects, themes, and emotional tone. Then, write a detailed and engaging description of the image as if you were the person who took or uploaded it. Your description should be personal and interesting.
+
+For example, instead of "A person is standing on a mountain," you might write "Here I am at the top of the mountain, feeling on top of the world after a long hike!"
+
+Image: {{media url=imageUri}}
+
+Format the output as a JSON object with a "description" field.`,
 });
 
 const analyzeContentFlow = ai.defineFlow(
