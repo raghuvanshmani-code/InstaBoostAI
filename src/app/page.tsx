@@ -119,27 +119,35 @@ export default function Home() {
     }
   };
 
-  const handleGenerate = async (file: File) => {
+  const handleGenerate = async (fileOrUrl: File | string) => {
     setResults(null);
     startTransition(async () => {
       let imageUri: string | undefined = undefined;
-      try {
-        imageUri = await toDataURL(file);
-      } catch (error) {
-        toast({
-          title: 'Image Processing Error',
-          description: 'Could not read the image file. Please try another image.',
-          variant: 'destructive',
-        });
-        return;
+
+      if (typeof fileOrUrl === 'string') {
+        // It's a URL from a sample image
+        imageUri = fileOrUrl;
+      } else {
+        // It's a file from user upload
+        try {
+          imageUri = await toDataURL(fileOrUrl);
+        } catch (error) {
+          toast({
+            title: 'Image Processing Error',
+            description: 'Could not read the image file. Please try another image.',
+            variant: 'destructive',
+          });
+          return;
+        }
       }
 
-      const response = await generateAllSuggestions({ 
+      const response = await generateAllSuggestions({
         imageUri,
         tone,
         language,
         customInstructions,
       });
+
       if (response.error) {
         toast({
           title: 'Generation Failed',
@@ -154,26 +162,19 @@ export default function Home() {
   };
 
   const handleSampleImageClick = async (imageUrl: string) => {
-    try {
-      // Set preview immediately
-      setImagePreview(imageUrl);
-      setResults(null);
-      
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const file = new File([blob], "sample-image.jpg", { type: blob.type });
-      
-      setImageFile(file);
-      // NOTE: We are not auto-generating here. User must click "Generate".
+    // Set preview immediately
+    setImagePreview(imageUrl);
+    setResults(null); // Clear previous results
+    
+    // Set a placeholder File object, since some logic depends on it.
+    // The actual generation will use the URL.
+    const sampleFile = new File([], "sample.jpg", {type: "image/jpeg"});
+    setImageFile(sampleFile);
 
-    } catch (error) {
-      toast({
-        title: "Failed to load sample",
-        description: "There was an issue loading the sample image.",
-        variant: "destructive",
-      });
-    }
+    // Directly trigger generation with the image URL
+    handleGenerate(imageUrl);
   };
+
 
   const showResults = imagePreview && (results || isPending);
 
@@ -257,7 +258,7 @@ export default function Home() {
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                   <div className="md:col-span-1 flex flex-col items-center md:items-start text-center md:text-left">
                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Create Your Post</h2>
-                     <p className="mt-4 text-lg text-muted-foreground text-left">
+                      <p className="mt-4 text-lg text-muted-foreground md:text-left">
                        1. Upload an image. <br/>
                        2. Customize the tone. <br/>
                        3. Generate content!

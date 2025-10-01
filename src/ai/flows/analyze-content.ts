@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -15,7 +16,7 @@ const AnalyzeContentInputSchema = z.object({
   imageUri: z
     .string()
     .describe(
-      "A photo of content, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "A photo of content, as a data URI or public URL. If data URI, it must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 export type AnalyzeContentInput = z.infer<typeof AnalyzeContentInputSchema>;
