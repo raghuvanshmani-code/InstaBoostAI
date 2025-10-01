@@ -30,7 +30,7 @@ type ResultsPanelProps = {
 export default function ResultsPanel({ results, isLoading, imagePreview }: ResultsPanelProps) {
   if (isLoading || !results) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="w-full aspect-video rounded-lg overflow-hidden relative shadow-lg">
           {imagePreview ? (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
@@ -38,7 +38,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
             <Skeleton className="w-full h-full" />
           )}
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
             <Skeleton className="h-12 w-full rounded-lg" />
             <Card className="bg-card/50">
               <CardContent className="p-6 space-y-4">
@@ -55,13 +55,13 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
   const allHashtags = results.hashtags.join(' ');
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="w-full aspect-video rounded-lg overflow-hidden relative shadow-lg">
           {imagePreview && (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
           )}
         </div>
-        <div className="h-full">
+        <div className="h-full w-full">
           <Tabs defaultValue="captions" className="w-full">
             <TabsList className="grid w-full grid-cols-3 h-12">
               <TabsTrigger value="captions" className="text-base gap-2">
