@@ -29,6 +29,12 @@ type ResultsPanelProps = {
   imagePreview: string | null;
 };
 
+const ShimmerSkeleton = () => (
+  <div className="relative w-full h-full overflow-hidden rounded-lg bg-muted">
+    <div className="shimmer-gradient absolute inset-0" />
+  </div>
+);
+
 export default function ResultsPanel({ results, isLoading, imagePreview }: ResultsPanelProps) {
   if (isLoading || !results) {
     return (
@@ -37,18 +43,12 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
           {imagePreview ? (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
           ) : (
-            <Skeleton className="w-full h-full" />
+            <ShimmerSkeleton />
           )}
         </div>
         <div className="space-y-4 w-full">
-            <Skeleton className="h-12 w-full rounded-lg" />
-            <Card className="bg-card/50">
-              <CardContent className="p-6 space-y-4">
-                <Skeleton className="h-10 w-full rounded-lg" />
-                <Skeleton className="h-10 w-full rounded-lg" />
-                <Skeleton className="h-10 w-[80%] rounded-lg" />
-              </CardContent>
-            </Card>
+            <div className="h-12 w-full rounded-lg relative overflow-hidden bg-muted"><div className="shimmer-gradient absolute inset-0" /></div>
+            <div className="w-full h-full rounded-lg relative overflow-hidden bg-muted"><div className="shimmer-gradient absolute inset-0" /></div>
         </div>
       </div>
     );
