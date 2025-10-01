@@ -10,6 +10,7 @@ import type { AIResults } from '@/app/components/results-panel';
 import { generateAllSuggestions } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Image from 'next/image';
 
 const toDataURL = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -28,6 +29,7 @@ export default function Home() {
   const [results, setResults] = useState<AIResults | null>(null);
 
   const sampleImages = PlaceHolderImages.filter(p => p.id.startsWith('sample-'));
+  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-image-1');
 
   const handleFileChange = (file: File | null) => {
     if (file) {
@@ -115,14 +117,16 @@ export default function Home() {
                   posts in seconds.
                 </p>
                 <div className="relative mt-4 w-full aspect-video rounded-xl overflow-hidden shadow-2xl">
-                  <video
-                      src="https://videos.pexels.com/video-files/3134533/3134533-hd_1920_1080_25fps.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
+                    {heroImage && (
+                        <Image
+                            src={heroImage.imageUrl}
+                            alt={heroImage.description}
+                            fill
+                            className="object-cover"
+                            data-ai-hint={heroImage.imageHint}
+                            priority
+                        />
+                    )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-6">
                     <h3 className="text-2xl font-bold text-white">
