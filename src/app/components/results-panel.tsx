@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import {
@@ -143,7 +142,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                 <TabItem value="description" label="Description" icon={FileText} />
             </TabsList>
             <div className="flex-grow mt-4 overflow-hidden">
-                <TabsContent value="captions" className="h-full m-0">
+                <TabsContent value="captions" className="h-[60svh] md:h-auto m-0">
                   <Card className="h-full flex flex-col">
                     <CardHeader>
                       <CardTitle>Generated Captions</CardTitle>
@@ -162,7 +161,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                     </CardContent>
                   </Card>
                 </TabsContent>
-                <TabsContent value="hashtags" className="h-full m-0">
+                <TabsContent value="hashtags" className="h-[60svh] md:h-auto m-0">
                   <Card className="h-full flex flex-col">
                     <CardHeader>
                       <div className="flex justify-between items-center">
@@ -199,7 +198,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                     </CardContent>
                   </Card>
                 </TabsContent>
-                 <TabsContent value="suggestions" className="h-full m-0">
+                 <TabsContent value="suggestions" className="h-[60svh] md:h-auto m-0">
                   <Card className="h-full flex flex-col">
                     <CardHeader>
                       <CardTitle>Post Suggestions</CardTitle>
@@ -220,7 +219,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                     </CardContent>
                   </Card>
                 </TabsContent>
-                <TabsContent value="description" className="h-full m-0">
+                <TabsContent value="description" className="h-[60svh] md:h-auto m-0">
                   <Card className="h-full flex flex-col">
                     <CardHeader>
                       <div className="flex justify-between items-start">
