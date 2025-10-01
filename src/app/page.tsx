@@ -255,9 +255,9 @@ export default function Home() {
 
             <div id="content-panel" className="w-full max-w-6xl mx-auto py-12 md:py-24">
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                  <div className="md:col-span-1 flex flex-col items-start text-center md:text-left">
+                  <div className="md:col-span-1 flex flex-col items-center md:items-start text-center md:text-left">
                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Create Your Post</h2>
-                     <p className="mt-4 text-lg text-muted-foreground">
+                     <p className="mt-4 text-lg text-muted-foreground text-left">
                        1. Upload an image. <br/>
                        2. Customize the tone. <br/>
                        3. Generate content!
