@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import {
@@ -16,12 +17,14 @@ import { FileText, Hash, MessageSquareQuote, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { CopyButton } from './copy-button';
+import { HashtagReasoning, type HashtagReasoningData } from './hashtag-reasoning';
+
 
 export type AIResults = {
   description: string;
   captions: string[];
   hashtags: string[];
-  hashtagReasoning: string;
+  hashtagReasoning: HashtagReasoningData;
 };
 
 type ResultsPanelProps = {
@@ -156,8 +159,8 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="reasoning">
                                 <AccordionTrigger>Why these hashtags?</AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground whitespace-pre-wrap">
-                                    {results.hashtagReasoning}
+                                <AccordionContent>
+                                    <HashtagReasoning reasoning={results.hashtagReasoning} />
                                 </AccordionContent>
                                 </AccordionItem>
                             </Accordion>

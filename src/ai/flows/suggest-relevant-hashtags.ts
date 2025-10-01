@@ -22,17 +22,29 @@ export type SuggestRelevantHashtagsInput = z.infer<
   typeof SuggestRelevantHashtagsInputSchema
 >;
 
+const StrategyPointSchema = z.object({
+  point: z.string().describe('A concise, research-backed bullet point for the strategic value of the chosen tags.'),
+  source: z.string().describe('The reputable source for the point (e.g., "Hootsuite, 2024").'),
+});
+
+const HashtagStrategySchema = z.object({
+  title: z.string().describe('The title of the strategy (e.g., "High-Volume Strategy").'),
+  description: z.string().describe('A brief description of the strategy.'),
+  estimatedReach: z.number().describe('The estimated reach increase as a percentage (e.g., 40 for +40%).'),
+  points: z.array(StrategyPointSchema).describe('An array of strategic points backing the strategy.'),
+});
+
 const SuggestRelevantHashtagsOutputSchema = z.object({
   hashtags: z
     .array(z.string())
     .describe(
       'An array of relevant and trending hashtags that balance broad and niche appeal to optimize reach.'
     ),
-  reasoning: z
-    .string()
-    .describe(
-      'Explanation of the reasoning of why these hashtags were selected, presented in a structured format with citations.'
-    ),
+  reasoning: z.object({
+      highVolume: HashtagStrategySchema,
+      niche: HashtagStrategySchema,
+      trending: HashtagStrategySchema,
+  }).describe('An object containing the reasoning for each hashtag strategy.'),
 });
 export type SuggestRelevantHashtagsOutput = z.infer<
   typeof SuggestRelevantHashtagsOutputSchema
@@ -50,27 +62,24 @@ const prompt = ai.definePrompt({
   output: {schema: SuggestRelevantHashtagsOutputSchema},
   prompt: `You are a world-class social media SEO strategist with a deep understanding of Instagram's algorithm and real-time trends. Your analysis is data-driven and focused on maximizing organic reach and engagement.
 
-  Given the content description below, provide a meticulously curated list of hashtags. Your strategy should include:
+  Given the content description below, provide a meticulously curated list of hashtags and a structured analysis of your strategy.
+
+  Your strategy should include three parts:
   1.  **High-Volume Hashtags:** 2-3 popular hashtags to tap into broad trends.
   2.  **Niche-Specific Hashtags:** 5-7 hashtags that are highly relevant to the subject matter, targeting a specific community.
   3.  **Emerging/Trending Hashtags:** 1-2 hashtags that are currently gaining traction to capitalize on new waves of interest.
 
   Content Description: {{{contentDescription}}}
 
-  You must provide a "reasoning" for your selection. The reasoning should be formatted as a string with clear headings for each hashtag category (High-Volume, Niche-Specific, Emerging/Trending). Under each heading, provide a concise, research-backed bullet point for the strategic value of the chosen tags. Include estimated reach increase percentages and cite a reputable source for each point.
+  You must provide your reasoning as a structured JSON object. For each of the three strategies (highVolume, niche, trending), provide:
+  - A title (e.g., "High-Volume Strategy").
+  - A brief, one-sentence description of the strategy.
+  - An estimated reach increase as a number (e.g., 40 for +40%).
+  - An array of "points", where each point has:
+    - A "point" string: A concise, research-backed bullet point on the strategic value.
+    - A "source" string: The reputable source and year (e.g., "Hootsuite, 2024").
 
-  Example reasoning format:
-
-  **High-Volume Strategy (Est. Reach: +30-40%)**
-  *   Using tags like #travelphotography taps into a massive discovery pool. (Source: Hootsuite, 2024)
-
-  **Niche-Specific Strategy (Est. Engagement: +50-70%)**
-  *   Tags like #icelandichorse build a 'topic cluster,' signaling expertise and attracting a dedicated community. (Source: Sprout Social, 2023)
-
-  **Trending Strategy (Est. Virality Chance: +15%)**
-  *   Capitalizing on #solarpunkfuture taps into a growing aesthetic and conversation, increasing chances of being featured. (Source: Later, 2024)
-
-  Format the final output as a JSON object with "hashtags" (an array of strings) and "reasoning" (a single formatted string) fields.`,
+  Format the final output as a single JSON object with "hashtags" (an array of strings) and "reasoning" (a structured object) fields. Do not add any extra commentary.`,
 });
 
 const suggestRelevantHashtagsFlow = ai.defineFlow(
