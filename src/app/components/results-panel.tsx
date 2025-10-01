@@ -42,17 +42,27 @@ const ShimmerSkeleton = () => (
 
 const LoadingIndicator = () => {
   const [progress, setProgress] = useState(0);
+  const [stage, setStage] = useState('Analyzing image...');
 
   useEffect(() => {
+    // Stage 1: Initial analysis
+    setTimeout(() => {
+      setProgress(30);
+      setStage('Generating creative content...');
+    }, 800); 
+
+    // Stage 2: Content generation
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 95) {
           clearInterval(interval);
+          setStage('Finalizing...');
           return 95;
         }
-        return prev + 5;
+        // Slower progress during the "heavy lifting" phase
+        return prev + (Math.random() * 3 + 1);
       });
-    }, 200);
+    }, 400);
 
     return () => clearInterval(interval);
   }, []);
@@ -66,7 +76,7 @@ const LoadingIndicator = () => {
         </h2>
       </div>
       <p className="text-muted-foreground text-center">
-        Our AI is crafting the perfect content for your image. This might take a few moments.
+        {stage}
       </p>
       <div className="w-full max-w-md mt-4">
         <Progress value={progress} className="h-2" />
