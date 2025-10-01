@@ -168,10 +168,6 @@ export default function ContentPanel({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="english">English</SelectItem>
-                  <SelectItem value="spanish">Spanish</SelectItem>
-                  <SelectItem value="french">French</SelectItem>
-                  <SelectItem value="german">German</SelectItem>
-                  <SelectItem value="japanese">Japanese</SelectItem>
                   <SelectItem value="hindi">Hindi</SelectItem>
                   <SelectItem value="hinglish">Hinglish</SelectItem>
                 </SelectContent>
