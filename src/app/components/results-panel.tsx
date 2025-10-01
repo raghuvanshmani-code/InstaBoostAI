@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Hash, MessageSquareQuote, Sparkles, TrendingUp } from 'lucide-react';
+import { FileText, Hash, Lightbulb, MessageSquareQuote, Sparkles, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { CopyButton } from './copy-button';
@@ -25,6 +25,7 @@ export type AIResults = {
   captions: string[];
   hashtags: { tag: string; reach: number }[];
   hashtagReasoning: HashtagReasoningData;
+  postSuggestions: string[];
 };
 
 type ResultsPanelProps = {
@@ -107,7 +108,7 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
         </div>
         <div className="h-full w-full">
           <Tabs defaultValue="captions" className="flex flex-col h-full w-full">
-            <TabsList className="grid w-full grid-cols-3 h-12">
+            <TabsList className="grid w-full grid-cols-4 h-12">
               <TabsTrigger value="captions" className="text-base gap-2">
                 <MessageSquareQuote />
                 Captions
@@ -115,6 +116,10 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
               <TabsTrigger value="hashtags" className="text-base gap-2">
                 <Hash />
                 Hashtags
+              </TabsTrigger>
+              <TabsTrigger value="suggestions" className="text-base gap-2">
+                <Lightbulb />
+                Suggestions
               </TabsTrigger>
               <TabsTrigger value="description" className="text-base gap-2">
                 <FileText />
@@ -175,6 +180,27 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                                 </AccordionItem>
                             </Accordion>
                         </ScrollArea>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                 <TabsContent value="suggestions" className="h-full m-0">
+                  <Card className="h-full flex flex-col">
+                    <CardHeader>
+                      <CardTitle>Post Suggestions</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow overflow-hidden">
+                      <ScrollArea className="h-full pr-4">
+                        <div className="space-y-4">
+                          {results.postSuggestions.map((suggestion, index) => (
+                            <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-background border">
+                               <div className="bg-primary/10 text-primary p-2 rounded-full mt-1">
+                                <Lightbulb className="h-5 w-5" />
+                               </div>
+                              <p className="text-sm flex-grow pt-1">{suggestion}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
                     </CardContent>
                   </Card>
                 </TabsContent>

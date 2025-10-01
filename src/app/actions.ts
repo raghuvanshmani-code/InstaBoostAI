@@ -3,6 +3,7 @@
 
 import { analyzeContent } from '@/ai/flows/analyze-content';
 import { generateInstagramCaption } from '@/ai/flows/generate-instagram-caption';
+import { generatePostSuggestions } from '@/ai/flows/generate-post-suggestions';
 import { suggestRelevantHashtags } from '@/ai/flows/suggest-relevant-hashtags';
 import { z } from 'zod';
 
@@ -17,12 +18,13 @@ export async function generateAllSuggestions(input: z.infer<typeof inputSchema>)
     const analysisResult = await analyzeContent({ imageUri: validatedInput.imageUri });
     const contentDescription = analysisResult.description;
 
-    const [captionResult, hashtagResult] = await Promise.all([
+    const [captionResult, hashtagResult, suggestionsResult] = await Promise.all([
       generateInstagramCaption({
         contentDescription: contentDescription,
         imageUri: validatedInput.imageUri,
       }),
       suggestRelevantHashtags({ contentDescription: contentDescription }),
+      generatePostSuggestions({ contentDescription: contentDescription }),
     ]);
 
     return {
@@ -31,6 +33,7 @@ export async function generateAllSuggestions(input: z.infer<typeof inputSchema>)
         captions: captionResult.captions,
         hashtags: hashtagResult.hashtags,
         hashtagReasoning: hashtagResult.reasoning,
+        postSuggestions: suggestionsResult.suggestions,
       },
       error: null,
     };
