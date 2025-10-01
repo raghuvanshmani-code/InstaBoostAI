@@ -71,7 +71,7 @@ export default function Home() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [results, setResults] = useState<AIResults | null>(null);
   const [tone, setTone] = useState('');
-  const [mood, setMood] = useState('');
+  const [language, setLanguage] = useState('english');
   const [customInstructions, setCustomInstructions] = useState('');
 
   const sampleImages = PlaceHolderImages.filter(p => p.id.startsWith('sample-'));
@@ -119,7 +119,7 @@ export default function Home() {
       const response = await generateAllSuggestions({ 
         imageUri,
         tone,
-        mood,
+        language,
         customInstructions,
       });
       if (response.error) {
@@ -215,8 +215,8 @@ export default function Home() {
                     sampleImages={sampleImages}
                     tone={tone}
                     onToneChange={setTone}
-                    mood={mood}
-                    onMoodChange={setMood}
+                    language={language}
+                    onLanguageChange={setLanguage}
                     customInstructions={customInstructions}
                     onCustomInstructionsChange={setCustomInstructions}
                     onGenerateClick={handleGenerateClick}

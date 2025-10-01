@@ -10,7 +10,7 @@ import { z } from 'zod';
 const inputSchema = z.object({
   imageUri: z.string(),
   tone: z.string().optional(),
-  mood: z.string().optional(),
+  language: z.string().optional(),
   customInstructions: z.string().optional(),
 });
 
@@ -26,14 +26,14 @@ export async function generateAllSuggestions(input: z.infer<typeof inputSchema>)
         contentDescription: contentDescription,
         imageUri: validatedInput.imageUri,
         tone: validatedInput.tone,
-        mood: validatedInput.mood,
+        language: validatedInput.language,
         customInstructions: validatedInput.customInstructions,
       }),
       suggestRelevantHashtags({ contentDescription: contentDescription }),
       generatePostSuggestions({ 
         contentDescription: contentDescription,
         tone: validatedInput.tone,
-        mood: validatedInput.mood,
+        language: validatedInput.language,
         customInstructions: validatedInput.customInstructions,
       }),
     ]);

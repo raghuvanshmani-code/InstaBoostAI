@@ -3,7 +3,7 @@
 
 import { useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { BrainCircuit, CheckCircle, Languages, Smile, Upload, WandSparkles } from 'lucide-react';
+import { BrainCircuit, CheckCircle, Languages, Upload, WandSparkles } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
@@ -25,8 +25,8 @@ type ContentPanelProps = {
   sampleImages: ImagePlaceholder[];
   tone: string;
   onToneChange: (tone: string) => void;
-  mood: string;
-  onMoodChange: (mood: string) => void;
+  language: string;
+  onLanguageChange: (language: string) => void;
   customInstructions: string;
   onCustomInstructionsChange: (instructions: string) => void;
   onGenerateClick: () => void;
@@ -41,8 +41,8 @@ export default function ContentPanel({
   sampleImages,
   tone,
   onToneChange,
-  mood,
-  onMoodChange,
+  language,
+  onLanguageChange,
   customInstructions,
   onCustomInstructionsChange,
   onGenerateClick,
@@ -158,31 +158,31 @@ export default function ContentPanel({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="mood-select" className="flex items-center gap-2">
-                <Smile className="h-4 w-4" />
-                Mood
+              <Label htmlFor="language-select" className="flex items-center gap-2">
+                <Languages className="h-4 w-4" />
+                Language
               </Label>
-              <Select value={mood} onValueChange={onMoodChange} disabled={isLoading}>
-                <SelectTrigger id="mood-select">
-                  <SelectValue placeholder="Select a mood..." />
+              <Select value={language} onValueChange={onLanguageChange} disabled={isLoading}>
+                <SelectTrigger id="language-select">
+                  <SelectValue placeholder="Select a language..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="happy">Happy</SelectItem>
-                  <SelectItem value="excited">Excited</SelectItem>
-                  <SelectItem value="relaxed">Relaxed</SelectItem>
-                  <SelectItem value="adventurous">Adventurous</SelectItem>
-                  <SelectItem value="mysterious">Mysterious</SelectItem>
+                  <SelectItem value="english">English</SelectItem>
+                  <SelectItem value="spanish">Spanish</SelectItem>
+                  <SelectItem value="french">French</SelectItem>
+                  <SelectItem value="german">German</SelectItem>
+                  <SelectItem value="japanese">Japanese</SelectItem>
                 </SelectContent>
               </Select>
             </div>
              <div className="space-y-2 md:col-span-2">
               <Label htmlFor="custom-instructions" className="flex items-center gap-2">
-                <Languages className="h-4 w-4" />
+                <WandSparkles className="h-4 w-4" />
                 Custom Instructions
               </Label>
               <Input 
                 id="custom-instructions" 
-                placeholder="e.g., 'Mention my new product' or 'Translate to Spanish'"
+                placeholder="e.g., 'Mention my new product'"
                 value={customInstructions}
                 onChange={(e) => onCustomInstructionsChange(e.target.value)}
                 disabled={isLoading}

@@ -17,7 +17,7 @@ const GeneratePostSuggestionsInputSchema = z.object({
     .string()
     .describe('A description of the image or video content.'),
   tone: z.string().optional().describe('The desired tone for the post.'),
-  mood: z.string().optional().describe('The desired mood for the post.'),
+  language: z.string().optional().describe('The desired language for the post.'),
   customInstructions: z.string().optional().describe('Any specific keywords or instructions.'),
 });
 export type GeneratePostSuggestionsInput = z.infer<
@@ -45,6 +45,8 @@ const prompt = ai.definePrompt({
   output: {schema: GeneratePostSuggestionsOutputSchema},
   prompt: `You are an expert social media strategist. Based on the provided content description and creative direction, generate a list of 3-5 actionable suggestions to improve the post's impact and engagement.
 
+The suggestions should be written in the specified language. If no language is specified, default to English.
+
 Focus on the following areas, keeping the user's creative direction in mind:
 - **Call to Action (CTA):** Suggest a clear, compelling CTA to encourage user interaction.
 - **Engagement Questions:** Recommend questions to ask the audience to spark conversation.
@@ -57,8 +59,8 @@ Creative Direction:
 {{#if tone}}
 - Tone: {{{tone}}}
 {{/if}}
-{{#if mood}}
-- Mood: {{{mood}}}
+{{#if language}}
+- Language: {{{language}}}
 {{/if}}
 {{#if customInstructions}}
 - Custom Instructions: {{{customInstructions}}}
