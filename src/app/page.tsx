@@ -67,16 +67,16 @@ const testimonials = [
 
 const sampleOutput = {
   captions: [
-    "Just me, my board, and the open road. 🛹 Sometimes the simplest moments are the most profound. Where's your favorite place to skate?",
-    "Golden hour vibes and concrete waves. ✨ There's nothing quite like the feeling of freedom with wheels under your feet.",
-    "Riding into the sunset. This view never gets old. What's your favorite way to end the day? 🌅",
+    "Diving into a world of color and creativity. 🎨 What does this image make you feel?",
+    "Where art and imagination collide. Loving these vibrant vibes! ✨",
+    "Letting the colors do the talking. Sometimes, the best creations are the most abstract. 🌈",
   ],
   hashtags: [
-    { tag: '#skatelife', reach: 85 },
-    { tag: '#sunsetskate', reach: 70 },
-    { tag: '#longboarding', reach: 75 },
-    { tag: '#goldenhour', reach: 90 },
-    { tag: '#chasinglight', reach: 60 },
+    { tag: '#CreativeEnergy', reach: 80 },
+    { tag: '#AbstractArt', reach: 85 },
+    { tag: '#ColorTherapy', reach: 70 },
+    { tag: '#DigitalArtwork', reach: 75 },
+    { tag: '#VibrantVibes', reach: 65 },
   ]
 };
 
@@ -164,6 +164,7 @@ export default function Home() {
       const file = new File([blob], "sample-image.jpg", { type: blob.type });
       
       setImageFile(file);
+      // NOTE: We are not auto-generating here. User must click "Generate".
 
     } catch (error) {
       toast({
@@ -354,5 +355,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
