@@ -1,7 +1,10 @@
 import type {NextConfig} from 'next';
 
+export default nextConfig;
 const nextConfig: NextConfig = {
   /* config options here */
+  output: 'export',               // For static export
+  basePath: '/InstaBoostAI',
   devIndicators: {
     allowedDevOrigins: [
       'https://6000-firebase-studio-1759314959280.cluster-iktsryn7xnhpexlu6255bftka4.cloudworkstations.dev',
