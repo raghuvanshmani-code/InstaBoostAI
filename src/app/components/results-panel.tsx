@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileText, Hash, MessageSquareQuote, Bot } from 'lucide-react';
@@ -32,13 +32,13 @@ export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) 
 
   if (!results) {
     return (
-      <div className="flex h-full min-h-[500px] items-center justify-center rounded-lg border-2 border-dashed border-border bg-card">
-        <div className="text-center text-muted-foreground flex flex-col items-center gap-4">
+      <Card className="flex h-full min-h-[500px] items-center justify-center bg-card/50">
+        <div className="text-center text-muted-foreground flex flex-col items-center gap-4 p-8">
           <Bot size={48} className="text-primary" />
-          <p className="text-lg font-medium">Your AI suggestions will appear here</p>
-          <p className="text-sm">Upload your content and hit 'Generate' to start!</p>
+          <h2 className="text-2xl font-semibold text-foreground">Your AI suggestions will appear here</h2>
+          <p className="text-md max-w-sm">Upload your content and hit 'Generate' to see the magic happen!</p>
         </div>
-      </div>
+      </Card>
     );
   }
 
@@ -47,52 +47,55 @@ export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) 
   return (
     <div className="h-full">
       <Tabs defaultValue="captions" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="captions">
+        <TabsList className="grid w-full grid-cols-3 h-12">
+          <TabsTrigger value="captions" className="text-base">
             <MessageSquareQuote className="mr-2" />
             Captions
           </TabsTrigger>
-          <TabsTrigger value="hashtags">
+          <TabsTrigger value="hashtags" className="text-base">
             <Hash className="mr-2" />
             Hashtags
           </TabsTrigger>
-          <TabsTrigger value="description">
+          <TabsTrigger value="description" className="text-base">
             <FileText className="mr-2" />
             Description
           </TabsTrigger>
         </TabsList>
         <TabsContent value="captions" className="mt-4">
-          <Card>
-            <CardContent className="p-6 space-y-4">
+          <Card className="bg-card/50">
+            <CardHeader>
+              <CardTitle>Generated Captions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               {results.captions.map((caption, index) => (
-                <Card key={index} className="bg-muted/50 hover:bg-muted transition-colors">
-                  <CardContent className="p-4 flex justify-between items-start gap-4">
-                    <p className="text-sm flex-grow">{caption}</p>
-                    <CopyButton textToCopy={caption} />
-                  </CardContent>
-                </Card>
+                <div key={index} className="flex justify-between items-start gap-4 p-4 rounded-lg bg-background/50 border">
+                  <p className="text-sm flex-grow pt-1">{caption}</p>
+                  <CopyButton textToCopy={caption} />
+                </div>
               ))}
             </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="hashtags" className="mt-4">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-semibold">Suggested Hashtags</h3>
+          <Card className="bg-card/50">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle>Suggested Hashtags</CardTitle>
                 <CopyButton textToCopy={allHashtags} />
               </div>
+            </CardHeader>
+            <CardContent>
               <div className="flex flex-wrap gap-2 mb-6">
                 {results.hashtags.map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="text-sm font-medium">
+                  <Badge key={index} variant="secondary" className="text-sm font-medium px-3 py-1">
                     {tag}
                   </Badge>
                 ))}
               </div>
               <Accordion type="single" collapsible>
                 <AccordionItem value="reasoning">
-                  <AccordionTrigger className="text-sm">Why these hashtags?</AccordionTrigger>
-                  <AccordionContent className="text-sm text-muted-foreground">
+                  <AccordionTrigger>Why these hashtags?</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
                     {results.hashtagReasoning}
                   </AccordionContent>
                 </AccordionItem>
@@ -101,12 +104,14 @@ export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) 
           </Card>
         </TabsContent>
         <TabsContent value="description" className="mt-4">
-          <Card>
-            <CardContent className="p-6 space-y-4">
+          <Card className="bg-card/50">
+             <CardHeader>
               <div className="flex justify-between items-start">
-                <h3 className="font-semibold flex-grow">Image Analysis</h3>
+                <CardTitle>Image Analysis</CardTitle>
                 <CopyButton textToCopy={results.description} />
               </div>
+            </CardHeader>
+            <CardContent>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{results.description}</p>
             </CardContent>
           </Card>
@@ -119,8 +124,8 @@ export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) 
 function LoadingSkeletons() {
   return (
     <div className="space-y-4">
-      <Skeleton className="h-10 w-full rounded-lg" />
-      <Card>
+      <Skeleton className="h-12 w-full rounded-lg" />
+      <Card className="bg-card/50">
         <CardContent className="p-6 space-y-4">
           <Skeleton className="h-20 w-full rounded-lg" />
           <Skeleton className="h-20 w-full rounded-lg" />

@@ -57,17 +57,17 @@ export default function ContentPanel({
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full bg-card/50">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-xl">
           <ImageIcon className="text-primary" />
-          Content
+          Your Content
         </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-6">
         <div
           className={cn(
-            'relative group flex aspect-video w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border transition-colors',
+            'relative group flex aspect-video w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-background/50 transition-colors',
             isDragging ? 'border-primary bg-primary/10' : 'hover:border-primary/50'
           )}
           onClick={handleFileSelect}
@@ -82,7 +82,7 @@ export default function ContentPanel({
                 src={imagePreview}
                 alt="Content preview"
                 fill
-                className="object-contain rounded-md transition-opacity group-hover:opacity-20"
+                className="object-contain rounded-md transition-opacity group-hover:opacity-10"
                 data-ai-hint={placeholderImage?.imageHint}
               />
               <div className="flex flex-col items-center gap-2 text-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
@@ -108,9 +108,12 @@ export default function ContentPanel({
             onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
           />
         </div>
-        <Button onClick={onGenerate} disabled={isLoading} size="lg" className="w-full">
+        <Button onClick={onGenerate} disabled={!imagePreview || isLoading} size="lg" className="w-full text-lg font-semibold py-6">
           {isLoading ? (
-            <Loader2 className="animate-spin" />
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Generating...
+            </>
           ) : (
             'Generate Suggestions'
           )}
