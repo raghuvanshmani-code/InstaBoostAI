@@ -31,7 +31,7 @@ const SuggestRelevantHashtagsOutputSchema = z.object({
   reasoning: z
     .string()
     .describe(
-      'Explanation of the reasoning of why these hashtags were selected.'
+      'Explanation of the reasoning of why these hashtags were selected, presented as bullet points with citations.'
     ),
 });
 export type SuggestRelevantHashtagsOutput = z.infer<
@@ -57,9 +57,16 @@ const prompt = ai.definePrompt({
 
   Content Description: {{{contentDescription}}}
 
-  You must provide a detailed, expert-level "reasoning" for your selection. Explain the strategic value of the hashtag mix, referencing how it balances reach and community engagement, and why it aligns with current Instagram trends. Your tone should be that of a serious SEO expert providing a consultation.
+  You must provide a "reasoning" for your selection as a series of concise bullet points. Each point should explain the strategic value of the hashtag choices, referencing how they align with current Instagram best practices for discoverability. Your tone should be that of a serious SEO expert.
 
-  Format the output as a JSON object with "hashtags" and "reasoning" fields.`,
+  - Each bullet point must be research-based and impressive.
+  - After each point, you MUST provide a citation from a reputable source (e.g., Later, Hootsuite, Sprout Social, or academic marketing journals). Format citations as "(Source: [Source Name], [Year])".
+
+  Example reasoning format:
+  *   "Combining high-volume tags like #travelphotography with niche tags like #icelandichorse creates a 'topic cluster' effect, improving visibility in both broad discovery feeds and specific interest groups. (Source: Hootsuite, 2023)"
+  *   "The use of #adventuretravel taps into a community-driven hashtag with high engagement rates, fostering a sense of belonging and encouraging user interaction. (Source: Sprout Social, 2024)"
+
+  Format the final output as a JSON object with "hashtags" and "reasoning" fields.`,
 });
 
 const suggestRelevantHashtagsFlow = ai.defineFlow(
