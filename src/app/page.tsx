@@ -70,7 +70,7 @@ export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [results, setResults] = useState<AIResults | null>(null);
-  const [tone, setTone] = useState('');
+  const [tone, setTone] = useState('casual');
   const [language, setLanguage] = useState('english');
   const [customInstructions, setCustomInstructions] = useState('');
 
@@ -179,11 +179,10 @@ export default function Home() {
               <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
                 <div className="flex flex-col items-start gap-4">
                   <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                    AI-Powered Social Content
+                    Unlock Your Social Media Potential
                   </h1>
                   <p className="text-lg text-muted-foreground md:text-xl">
-                    Generate stunning captions and hashtags for your Instagram
-                    posts in seconds.
+                    From a single image, generate viral captions, strategic hashtags, and engaging post ideas in seconds.
                   </p>
                   <div className="relative mt-4 w-full aspect-video rounded-xl overflow-hidden shadow-2xl">
                       {heroImage && (
