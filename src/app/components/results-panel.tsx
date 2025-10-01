@@ -149,9 +149,9 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
                     </CardHeader>
                     <CardContent className="flex-grow overflow-hidden">
                         <ScrollArea className="h-full pr-4">
-                            <div className="flex flex-wrap gap-3 mb-6">
+                            <div className="flex flex-wrap gap-4 mb-6">
                                 {results.hashtags.map((hashtag, index) => (
-                                <div key={index} className="flex flex-col items-center gap-1">
+                                <div key={index} className="flex flex-col items-center gap-1.5">
                                     <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
                                         {hashtag.tag}
                                     </Badge>
