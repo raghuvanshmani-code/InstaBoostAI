@@ -4,7 +4,6 @@
 import { useState, useTransition } from 'react';
 import { Bot } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import ContentPanel from '@/app/components/content-panel';
 import ResultsPanel from '@/app/components/results-panel';
 import type { AIResults } from '@/app/components/results-panel';
@@ -28,7 +27,6 @@ export default function Home() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [results, setResults] = useState<AIResults | null>(null);
 
-  const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-image-1');
   const sampleImages = PlaceHolderImages.filter(p => p.id.startsWith('sample-'));
 
   const handleFileChange = (file: File | null) => {
@@ -117,16 +115,14 @@ export default function Home() {
                   posts in seconds.
                 </p>
                 <div className="relative mt-4 w-full aspect-video rounded-xl overflow-hidden shadow-2xl">
-                  {heroImage && (
-                    <Image
-                      src={heroImage.imageUrl}
-                      alt={heroImage.description}
-                      fill
-                      className="object-cover"
-                      data-ai-hint={heroImage.imageHint}
-                      priority
+                  <video
+                      src="https://videos.pexels.com/video-files/3134533/3134533-hd_1920_1080_25fps.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
-                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-6">
                     <h3 className="text-2xl font-bold text-white">
