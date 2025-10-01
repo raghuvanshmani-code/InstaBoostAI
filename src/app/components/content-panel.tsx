@@ -1,24 +1,46 @@
+
 'use client';
 
 import { useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Upload } from 'lucide-react';
+import { BrainCircuit, Languages, Smile, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 type ContentPanelProps = {
   onFileChange: (file: File | null) => void;
   isLoading: boolean;
   onSampleClick: (imageUrl: string) => void;
   sampleImages: ImagePlaceholder[];
+  tone: string;
+  onToneChange: (tone: string) => void;
+  mood: string;
+  onMoodChange: (mood: string) => void;
+  customInstructions: string;
+  onCustomInstructionsChange: (instructions: string) => void;
 };
 
 export default function ContentPanel({
   onFileChange,
   isLoading,
   onSampleClick,
-  sampleImages
+  sampleImages,
+  tone,
+  onToneChange,
+  mood,
+  onMoodChange,
+  customInstructions,
+  onCustomInstructionsChange
 }: ContentPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -59,7 +81,7 @@ export default function ContentPanel({
 
   return (
     <Card className="w-full shadow-2xl">
-      <CardContent className="p-6">
+      <CardContent className="p-6 space-y-6">
         <div
           className={cn(
             'relative group flex h-64 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-background transition-colors',
@@ -97,7 +119,63 @@ export default function ContentPanel({
             disabled={isLoading}
           />
         </div>
-        <div className="mt-6">
+
+        <div>
+          <h3 className="text-center text-lg font-semibold mb-4">Customize Your Content</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tone-select" className="flex items-center gap-2">
+                <BrainCircuit className="h-4 w-4" />
+                Tone
+              </Label>
+              <Select value={tone} onValueChange={onToneChange} disabled={isLoading}>
+                <SelectTrigger id="tone-select">
+                  <SelectValue placeholder="Select a tone..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="casual">Casual</SelectItem>
+                  <SelectItem value="formal">Formal</SelectItem>
+                  <SelectItem value="humorous">Humorous</SelectItem>
+                  <SelectItem value="inspirational">Inspirational</SelectItem>
+                  <SelectItem value="witty">Witty</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mood-select" className="flex items-center gap-2">
+                <Smile className="h-4 w-4" />
+                Mood
+              </Label>
+              <Select value={mood} onValueChange={onMoodChange} disabled={isLoading}>
+                <SelectTrigger id="mood-select">
+                  <SelectValue placeholder="Select a mood..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="happy">Happy</SelectItem>
+                  <SelectItem value="excited">Excited</SelectItem>
+                  <SelectItem value="relaxed">Relaxed</SelectItem>
+                  <SelectItem value="adventurous">Adventurous</SelectItem>
+                  <SelectItem value="mysterious">Mysterious</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+             <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="custom-instructions" className="flex items-center gap-2">
+                <Languages className="h-4 w-4" />
+                Custom Instructions
+              </Label>
+              <Input 
+                id="custom-instructions" 
+                placeholder="e.g., 'Mention my new product' or 'Translate to Spanish'"
+                value={customInstructions}
+                onChange={(e) => onCustomInstructionsChange(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div>
             <p className="text-sm font-medium text-muted-foreground mb-3 text-center">Or try with a sample image:</p>
             <div className="grid grid-cols-3 gap-3">
               {sampleImages.map((sample) => (

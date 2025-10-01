@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -21,6 +22,9 @@ const GenerateInstagramCaptionInputSchema = z.object({
     .describe(
       "An optional photo of content, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  tone: z.string().optional().describe('The desired tone for the captions (e.g., Casual, Formal, Humorous).'),
+  mood: z.string().optional().describe('The desired mood for the captions (e.g., Happy, Nostalgic, Adventurous).'),
+  customInstructions: z.string().optional().describe('Any specific keywords or instructions to include.'),
 });
 export type GenerateInstagramCaptionInput = z.infer<
   typeof GenerateInstagramCaptionInputSchema
@@ -47,11 +51,25 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateInstagramCaptionOutputSchema},
   prompt: `You are an AI-powered social media expert specializing in generating engaging Instagram captions.
 
-  Based on the content description and image (if available), generate five different captions optimized for engagement. The captions should:
+  Based on the content description and image (if available), generate five different captions optimized for engagement.
+
+  The user has provided the following creative direction:
+  {{#if tone}}
+  - Tone: {{{tone}}}
+  {{/if}}
+  {{#if mood}}
+  - Mood: {{{mood}}}
+  {{/if}}
+  {{#if customInstructions}}
+  - Custom Instructions: {{{customInstructions}}}
+  {{/if}}
+
+  The captions should:
   *   Be creative and attention-grabbing
   *   Be relevant to the content
+  *   Align with the specified tone, mood, and instructions.
   *   Include relevant emojis
-  *   Vary in tone (e.g., humorous, inspirational, informative)
+  *   Vary in style (e.g., humorous, inspirational, informative)
   *   Do NOT include hashtags.
 
   Content Description: {{{contentDescription}}}

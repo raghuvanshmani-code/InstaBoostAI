@@ -70,6 +70,9 @@ export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [results, setResults] = useState<AIResults | null>(null);
+  const [tone, setTone] = useState('');
+  const [mood, setMood] = useState('');
+  const [customInstructions, setCustomInstructions] = useState('');
 
   const sampleImages = PlaceHolderImages.filter(p => p.id.startsWith('sample-'));
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-image-1');
@@ -102,7 +105,12 @@ export default function Home() {
         return;
       }
 
-      const response = await generateAllSuggestions({ imageUri });
+      const response = await generateAllSuggestions({ 
+        imageUri,
+        tone,
+        mood,
+        customInstructions,
+      });
       if (response.error) {
         toast({
           title: 'Generation Failed',
@@ -188,6 +196,12 @@ export default function Home() {
                     isLoading={isPending}
                     onSampleClick={handleSampleImageClick}
                     sampleImages={sampleImages}
+                    tone={tone}
+                    onToneChange={setTone}
+                    mood={mood}
+                    onMoodChange={setMood}
+                    customInstructions={customInstructions}
+                    onCustomInstructionsChange={setCustomInstructions}
                   />
                 </div>
               </div>
