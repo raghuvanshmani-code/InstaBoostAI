@@ -1,0 +1,131 @@
+'use client';
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Hash, Lightbulb, MessageSquareQuote } from 'lucide-react';
+import { CopyButton } from './copy-button';
+
+export type AIResults = {
+  captions: string[];
+  hashtags: string[];
+  hashtagReasoning: string;
+  seoTips: string;
+};
+
+type ResultsPanelProps = {
+  results: AIResults | null;
+  isLoading: boolean;
+};
+
+export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) {
+  if (isLoading) {
+    return <LoadingSkeletons />;
+  }
+
+  if (!results) {
+    return (
+      <div className="flex h-full min-h-[500px] items-center justify-center rounded-lg border-2 border-dashed border-border bg-card">
+        <div className="text-center text-muted-foreground">
+          <p className="text-lg font-medium">Your AI suggestions will appear here.</p>
+          <p className="text-sm">Upload your content and hit 'Generate' to start!</p>
+        </div>
+      </div>
+    );
+  }
+
+  const allHashtags = results.hashtags.join(' ');
+
+  return (
+    <div className="h-full">
+      <Tabs defaultValue="captions" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="captions">
+            <MessageSquareQuote className="mr-2" />
+            Captions
+          </TabsTrigger>
+          <TabsTrigger value="hashtags">
+            <Hash className="mr-2" />
+            Hashtags
+          </TabsTrigger>
+          <TabsTrigger value="seo">
+            <Lightbulb className="mr-2" />
+            SEO Tips
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="captions" className="mt-4">
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              {results.captions.map((caption, index) => (
+                <Card key={index} className="bg-muted/50">
+                  <CardContent className="p-4 flex justify-between items-start gap-4">
+                    <p className="text-sm flex-grow">{caption}</p>
+                    <CopyButton textToCopy={caption} />
+                  </CardContent>
+                </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="hashtags" className="mt-4">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-semibold">Suggested Hashtags</h3>
+                <CopyButton textToCopy={allHashtags} />
+              </div>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {results.hashtags.map((tag, index) => (
+                  <Badge key={index} variant="secondary" className="text-sm">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <Accordion type="single" collapsible>
+                <AccordionItem value="reasoning">
+                  <AccordionTrigger>Why these hashtags?</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground">
+                    {results.hashtagReasoning}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="seo" className="mt-4">
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <div className="flex justify-between items-start">
+                <h3 className="font-semibold flex-grow">Optimization Tips</h3>
+                <CopyButton textToCopy={results.seoTips} />
+              </div>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{results.seoTips}</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function LoadingSkeletons() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full" />
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-[80%]" />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
