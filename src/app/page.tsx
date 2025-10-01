@@ -67,16 +67,16 @@ const testimonials = [
 
 const sampleOutput = {
   captions: [
-    "Caught in the golden hour glow. ✨ A little bit of liner, a lot of sunshine.",
-    "That quiet moment just before the sun sets. Finding beauty in the stillness. 🌿",
-    "Letting the light paint the picture. What's one small detail that made you happy today?",
+    "Lost in a golden hour dream. ✨ This glitter liner is my new favorite way to shine.",
+    "A moment of peace in a world of chaos. Sometimes, you just need to close your eyes and find your light. 🌿",
+    "Makeup is my art, and the world is my canvas. What's your favorite way to express yourself?",
   ],
   hashtags: [
-    { tag: '#GoldenHour', reach: 88 },
-    { tag: '#PortraitMood', reach: 82 },
-    { tag: '#Ethereal', reach: 75 },
-    { tag: '#GraphicLiner', reach: 70 },
-    { tag: '#SoftGlow', reach: 68 },
+    { tag: '#GoldenHourMagic', reach: 92 },
+    { tag: '#CreativeMakeup', reach: 88 },
+    { tag: '#EtherealBeauty', reach: 85 },
+    { tag: '#GlitterLiner', reach: 80 },
+    { tag: '#PortraitPerfection', reach: 78 },
   ]
 };
 
