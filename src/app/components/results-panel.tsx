@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { FileText, Hash, Lightbulb, MessageSquareQuote, Sparkles, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -107,6 +108,23 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
 
   const allHashtags = results.hashtags.map(h => h.tag).join(' ');
 
+  const TabItem = ({ value, label, icon: Icon }: { value: string, label: string, icon: React.ElementType }) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <TabsTrigger value={value} className="text-base gap-2 data-[state=active]:shadow-none sm:w-auto">
+            <Icon className="h-5 w-5" />
+            <span className="hidden sm:inline">{label}</span>
+          </TabsTrigger>
+        </TooltipTrigger>
+        <TooltipContent className="sm:hidden">
+          <p>{label}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto items-start">
         <div className="md:sticky md:top-24 w-full">
@@ -119,22 +137,10 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
         <div className="h-full w-full">
           <Tabs defaultValue="captions" className="flex flex-col h-full w-full">
             <TabsList className="grid w-full grid-cols-4 h-12">
-              <TabsTrigger value="captions" className="text-base gap-2">
-                <MessageSquareQuote />
-                Captions
-              </TabsTrigger>
-              <TabsTrigger value="hashtags" className="text-base gap-2">
-                <Hash />
-                Hashtags
-              </TabsTrigger>
-              <TabsTrigger value="suggestions" className="text-base gap-2">
-                <Lightbulb />
-                Suggestions
-              </TabsTrigger>
-              <TabsTrigger value="description" className="text-base gap-2">
-                <FileText />
-                Description
-              </TabsTrigger>
+                <TabItem value="captions" label="Captions" icon={MessageSquareQuote} />
+                <TabItem value="hashtags" label="Hashtags" icon={Hash} />
+                <TabItem value="suggestions" label="Suggestions" icon={Lightbulb} />
+                <TabItem value="description" label="Description" icon={FileText} />
             </TabsList>
             <div className="flex-grow mt-4 overflow-hidden">
                 <TabsContent value="captions" className="h-full m-0">
