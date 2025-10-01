@@ -5,7 +5,7 @@
  * @fileOverview AI-powered Instagram caption generator.
  *
  * - generateInstagramCaption - A function that generates Instagram captions based on content analysis.
- * - GenerateInstagramCaptionInput - The input type for the generateInstagramCaption function.
+ * - GenerateInstagramCaptionInput - The input type for the generateInstagramcaption function.
  * - GenerateInstagramCaptionOutput - The return type for the generateInstagramCaption function.
  */
 
