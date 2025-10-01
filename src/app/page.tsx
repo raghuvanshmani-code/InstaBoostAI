@@ -86,7 +86,7 @@ export default function Home() {
     }
   };
 
-  const showResults = imagePreview && results && !isPending;
+  const showResults = imagePreview && (results || isPending);
 
   return (
     <div className="flex flex-col min-h-svh bg-background font-sans text-foreground">
