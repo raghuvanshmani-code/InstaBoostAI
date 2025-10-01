@@ -1,11 +1,7 @@
 'use server';
 
 /**
- * @fileOverview Provides SEO optimization tips based on the content provided.
- *
- * - provideSeoOptimizationTips - A function that provides SEO optimization tips.
- * - ProvideSeoOptimizationTipsInput - The input type for the provideSeoOptimizationTips function.
- * - ProvideSeoOptimizationTipsOutput - The return type for the provideSeoOptimizationTips function.
+ * @fileOverview This flow is being removed as per user request.
  */
 
 import {ai} from '@/ai/genkit';
@@ -32,24 +28,6 @@ export type ProvideSeoOptimizationTipsOutput = z.infer<
 export async function provideSeoOptimizationTips(
   input: ProvideSeoOptimizationTipsInput
 ): Promise<ProvideSeoOptimizationTipsOutput> {
-  return provideSeoOptimizationTipsFlow(input);
+  // This flow is deprecated.
+  return Promise.resolve({ seoTips: '' });
 }
-
-const prompt = ai.definePrompt({
-  name: 'provideSeoOptimizationTipsPrompt',
-  input: {schema: ProvideSeoOptimizationTipsInputSchema},
-  output: {schema: ProvideSeoOptimizationTipsOutputSchema},
-  prompt: `You are an SEO expert. Provide SEO optimization tips for the following content description to improve its visibility:\n\nContent Description: {{{contentDescription}}}\n\nSEO Tips:`,
-});
-
-const provideSeoOptimizationTipsFlow = ai.defineFlow(
-  {
-    name: 'provideSeoOptimizationTipsFlow',
-    inputSchema: ProvideSeoOptimizationTipsInputSchema,
-    outputSchema: ProvideSeoOptimizationTipsOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);

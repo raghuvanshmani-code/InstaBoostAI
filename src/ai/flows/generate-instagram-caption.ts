@@ -47,11 +47,12 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateInstagramCaptionOutputSchema},
   prompt: `You are an AI-powered social media expert specializing in generating engaging Instagram captions.
 
-  Based on the content description and image (if available), generate five different captions optimized for engagement.  The captions should:
+  Based on the content description and image (if available), generate five different captions optimized for engagement. The captions should:
   *   Be creative and attention-grabbing
   *   Be relevant to the content
   *   Include relevant emojis
   *   Vary in tone (e.g., humorous, inspirational, informative)
+  *   Do NOT include hashtags.
 
   Content Description: {{{contentDescription}}}
   {{#if imageUri}}

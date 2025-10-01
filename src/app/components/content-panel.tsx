@@ -3,8 +3,6 @@
 import { useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Image as ImageIcon, Loader2, Upload } from 'lucide-react';
 import Image from 'next/image';
@@ -14,12 +12,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 type ContentPanelProps = {
   imagePreview: string | null;
   onFileChange: (file: File | null) => void;
-  contentDescription: string;
-  setContentDescription: (value: string) => void;
   location: string;
   setLocation: (value: string) => void;
-  tags: string;
-  setTags: (value: string) => void;
   onGenerate: () => void;
   isLoading: boolean;
 };
@@ -27,12 +21,8 @@ type ContentPanelProps = {
 export default function ContentPanel({
   imagePreview,
   onFileChange,
-  contentDescription,
-  setContentDescription,
   location,
   setLocation,
-  tags,
-  setTags,
   onGenerate,
   isLoading,
 }: ContentPanelProps) {
@@ -98,7 +88,7 @@ export default function ContentPanel({
                 src={imagePreview}
                 alt="Content preview"
                 fill
-                className="object-cover rounded-md"
+                className="object-contain rounded-md"
                 data-ai-hint={placeholderImage?.imageHint}
               />
             ) : (
@@ -114,36 +104,6 @@ export default function ContentPanel({
               className="hidden"
               accept="image/*,video/*"
               onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
-            />
-          </div>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="content-description">Content Description</Label>
-          <Textarea
-            id="content-description"
-            placeholder="Describe your content, its theme, and any key elements. The more detail, the better the AI suggestions!"
-            value={contentDescription}
-            onChange={(e) => setContentDescription(e.target.value)}
-            rows={4}
-          />
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="grid gap-2">
-            <Label htmlFor="location">Location (optional)</Label>
-            <Input
-              id="location"
-              placeholder="e.g., Paris, France"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="tags">Tag People (optional)</Label>
-            <Input
-              id="tags"
-              placeholder="e.g., @username1, @username2"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
             />
           </div>
         </div>

@@ -10,14 +10,14 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Hash, Lightbulb, MessageSquareQuote } from 'lucide-react';
+import { FileText, Hash, MessageSquareQuote } from 'lucide-react';
 import { CopyButton } from './copy-button';
 
 export type AIResults = {
+  description: string;
   captions: string[];
   hashtags: string[];
   hashtagReasoning: string;
-  seoTips: string;
 };
 
 type ResultsPanelProps = {
@@ -55,9 +55,9 @@ export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) 
             <Hash className="mr-2" />
             Hashtags
           </TabsTrigger>
-          <TabsTrigger value="seo">
-            <Lightbulb className="mr-2" />
-            SEO Tips
+          <TabsTrigger value="description">
+            <FileText className="mr-2" />
+            Description
           </TabsTrigger>
         </TabsList>
         <TabsContent value="captions" className="mt-4">
@@ -99,14 +99,14 @@ export default function ResultsPanel({ results, isLoading }: ResultsPanelProps) 
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="seo" className="mt-4">
+        <TabsContent value="description" className="mt-4">
           <Card>
             <CardContent className="p-6 space-y-4">
               <div className="flex justify-between items-start">
-                <h3 className="font-semibold flex-grow">Optimization Tips</h3>
-                <CopyButton textToCopy={results.seoTips} />
+                <h3 className="font-semibold flex-grow">Image Analysis</h3>
+                <CopyButton textToCopy={results.description} />
               </div>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{results.seoTips}</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{results.description}</p>
             </CardContent>
           </Card>
         </TabsContent>

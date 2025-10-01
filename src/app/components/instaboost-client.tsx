@@ -23,9 +23,7 @@ export default function InstaBoostClient() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const placeholderImage = PlaceHolderImages.find(img => img.id === 'uploader-placeholder');
   const [imagePreview, setImagePreview] = useState<string | null>(placeholderImage?.imageUrl || null);
-  const [contentDescription, setContentDescription] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [tags, setTags] = useState<string>('');
   const [results, setResults] = useState<AIResults | null>(null);
 
   const handleFileChange = (file: File | null) => {
@@ -39,10 +37,10 @@ export default function InstaBoostClient() {
   };
 
   const handleGenerate = async () => {
-    if (!contentDescription && !imageFile) {
+    if (!imageFile) {
       toast({
         title: 'Input Missing',
-        description: 'Please provide an image or a description for your content.',
+        description: 'Please provide an image for your content.',
         variant: 'destructive',
       });
       return;
@@ -65,8 +63,16 @@ export default function InstaBoostClient() {
         }
       }
 
+      if (!imageUri) {
+        toast({
+          title: 'Image Processing Error',
+          description: 'Could not process the image. Please try another one.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
       const response = await generateAllSuggestions({
-        contentDescription: contentDescription || 'An image provided by the user',
         imageUri,
       });
 
@@ -88,12 +94,8 @@ export default function InstaBoostClient() {
         <ContentPanel
           imagePreview={imagePreview}
           onFileChange={handleFileChange}
-          contentDescription={contentDescription}
-          setContentDescription={setContentDescription}
           location={location}
           setLocation={setLocation}
-          tags={tags}
-          setTags={setTags}
           onGenerate={handleGenerate}
           isLoading={isPending}
         />

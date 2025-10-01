@@ -1,35 +1,36 @@
 
 'use server';
 
+import { analyzeContent } from '@/ai/flows/analyze-content';
 import { generateInstagramCaption } from '@/ai/flows/generate-instagram-caption';
-import { provideSeoOptimizationTips } from '@/ai/flows/provide-seo-optimization-tips';
 import { suggestRelevantHashtags } from '@/ai/flows/suggest-relevant-hashtags';
 import { z } from 'zod';
 
 const inputSchema = z.object({
-  contentDescription: z.string().min(1, 'Content description cannot be empty.'),
-  imageUri: z.string().optional(),
+  imageUri: z.string(),
 });
 
 export async function generateAllSuggestions(input: z.infer<typeof inputSchema>) {
   try {
     const validatedInput = inputSchema.parse(input);
 
-    const [captionResult, hashtagResult, seoResult] = await Promise.all([
+    const analysisResult = await analyzeContent({ imageUri: validatedInput.imageUri });
+    const contentDescription = analysisResult.description;
+
+    const [captionResult, hashtagResult] = await Promise.all([
       generateInstagramCaption({
-        contentDescription: validatedInput.contentDescription,
+        contentDescription: contentDescription,
         imageUri: validatedInput.imageUri,
       }),
-      suggestRelevantHashtags({ contentDescription: validatedInput.contentDescription }),
-      provideSeoOptimizationTips({ contentDescription: validatedInput.contentDescription }),
+      suggestRelevantHashtags({ contentDescription: contentDescription }),
     ]);
 
     return {
       data: {
+        description: contentDescription,
         captions: captionResult.captions,
         hashtags: hashtagResult.hashtags,
         hashtagReasoning: hashtagResult.reasoning,
-        seoTips: seoResult.seoTips,
       },
       error: null,
     };
