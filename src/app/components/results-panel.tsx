@@ -79,7 +79,7 @@ const LoadingIndicator = () => {
 export default function ResultsPanel({ results, isLoading, imagePreview }: ResultsPanelProps) {
   if (isLoading || !results) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto items-start">
         <div className="w-full aspect-square rounded-lg overflow-hidden relative shadow-lg">
           {imagePreview ? (
              <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
@@ -97,11 +97,13 @@ export default function ResultsPanel({ results, isLoading, imagePreview }: Resul
   const allHashtags = results.hashtags.map(h => h.tag).join(' ');
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto">
-        <div className="w-full aspect-square rounded-lg overflow-hidden relative shadow-lg">
-          {imagePreview && (
-             <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
-          )}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mx-auto items-start">
+        <div className="md:sticky md:top-24 w-full">
+          <div className="w-full aspect-square rounded-lg overflow-hidden relative shadow-lg">
+            {imagePreview && (
+               <Image src={imagePreview} alt="Content preview" fill className="object-cover" />
+            )}
+          </div>
         </div>
         <div className="h-full w-full">
           <Tabs defaultValue="captions" className="flex flex-col h-full w-full">
