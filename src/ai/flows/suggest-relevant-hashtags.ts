@@ -48,16 +48,18 @@ const prompt = ai.definePrompt({
   name: 'suggestRelevantHashtagsPrompt',
   input: {schema: SuggestRelevantHashtagsInputSchema},
   output: {schema: SuggestRelevantHashtagsOutputSchema},
-  prompt: `You are an AI expert in social media SEO, specializing in hashtag generation for Instagram.
+  prompt: `You are a world-class social media SEO strategist with a deep understanding of Instagram's algorithm and real-time trends. Your analysis is data-driven and focused on maximizing organic reach and engagement.
 
-  Given the following content description, suggest a list of relevant and trending hashtags that will increase the visibility of the post. Balance broad and niche appeal to optimize reach.
+  Given the content description below, provide a meticulously curated list of hashtags. Your strategy should include:
+  1.  **High-Volume Hashtags:** 2-3 popular hashtags to tap into broad trends.
+  2.  **Niche-Specific Hashtags:** 5-7 hashtags that are highly relevant to the subject matter, targeting a specific community.
+  3.  **Emerging/Trending Hashtags:** 1-2 hashtags that are currently gaining traction to capitalize on new waves of interest.
 
   Content Description: {{{contentDescription}}}
 
-  Format the output as a JSON object with "hashtags" and "reasoning" fields.
-  The hashtags should be an array of strings, and the reasoning should explain why these hashtags were selected.
-  Do not add hashtags that are too general, make sure there is a good balance of hashtags to maximize SEO.
-  Use your expert knowledge to provide the best results.`,
+  You must provide a detailed, expert-level "reasoning" for your selection. Explain the strategic value of the hashtag mix, referencing how it balances reach and community engagement, and why it aligns with current Instagram trends. Your tone should be that of a serious SEO expert providing a consultation.
+
+  Format the output as a JSON object with "hashtags" and "reasoning" fields.`,
 });
 
 const suggestRelevantHashtagsFlow = ai.defineFlow(
