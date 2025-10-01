@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-image-1",
-      "description": "A vibrant, abstract image with flowing colors and shapes.",
-      "imageUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2070&auto=format&fit=crop",
-      "imageHint": "abstract gradient"
+      "description": "A person holding a camera, with a vibrant, creative background.",
+      "imageUrl": "https://images.unsplash.com/photo-1505238680356-667803448bb6?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "creative photography"
     },
     {
       "id": "sample-1",
@@ -23,6 +23,12 @@
       "description": "A cute dog playing in a park.",
       "imageUrl": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1974&auto=format&fit=crop",
       "imageHint": "happy dog"
+    },
+    {
+      "id": "results-1",
+      "description": "A vibrant, abstract image with flowing colors and shapes.",
+      "imageUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "abstract gradient"
     }
   ]
 }
