@@ -5,7 +5,6 @@ import { useState, useTransition } from 'react';
 import { Bot } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import ContentPanel from '@/app/components/content-panel';
 import ResultsPanel from '@/app/components/results-panel';
 import type { AIResults } from '@/app/components/results-panel';
@@ -101,14 +100,6 @@ export default function Home() {
               InstaBoost AI
             </span>
           </Link>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" asChild>
-              <Link href="#">Log In</Link>
-            </Button>
-            <Button asChild>
-              <Link href="#">Sign Up</Link>
-            </Button>
-          </div>
         </div>
       </header>
       <main className="flex-1 flex flex-col items-center justify-center p-4">
