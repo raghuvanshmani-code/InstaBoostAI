@@ -17,6 +17,7 @@ import AnalyticsCharts from './components/analytics-charts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CopyButton } from '@/app/components/copy-button';
+import { validateImage, processImageForUpload } from '@/lib/image-utils';
 
 const toDataURL = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -97,10 +98,16 @@ export default function Home() {
 
   const handleFileChange = (file: File | null) => {
     if (file) {
+      const error = validateImage(file);
+      if (error) {
+        toast({ title: 'Upload Error', description: error, variant: 'destructive' });
+        return;
+      }
+      
       setImageFile(file);
       const preview = URL.createObjectURL(file);
       setImagePreview(preview);
-      setResults(null);
+      setResults(null); // Clear previous results on new image selection
     } else {
       setImageFile(null);
       setImagePreview(null);
@@ -110,6 +117,9 @@ export default function Home() {
   const handleGenerateClick = () => {
     if (imageFile) {
       handleGenerate(imageFile);
+    } else if (imagePreview) {
+      // This handles the case where a sample image was clicked
+      handleGenerate(imagePreview);
     } else {
       toast({
         title: 'No Image Selected',
@@ -120,21 +130,24 @@ export default function Home() {
   };
 
   const handleGenerate = async (fileOrUrl: File | string) => {
-    setResults(null);
+    setResults(null); // Clear previous results
+    
     startTransition(async () => {
-      let imageUri: string | undefined = undefined;
+      let imageUri: string;
 
       if (typeof fileOrUrl === 'string') {
         // It's a URL from a sample image
         imageUri = fileOrUrl;
+        if (!imagePreview) setImagePreview(fileOrUrl);
       } else {
         // It's a file from user upload
         try {
-          imageUri = await toDataURL(fileOrUrl);
-        } catch (error) {
+          const processedImage = await processImageForUpload(fileOrUrl);
+          imageUri = await toDataURL(processedImage);
+        } catch (error: any) {
           toast({
             title: 'Image Processing Error',
-            description: 'Could not read the image file. Please try another image.',
+            description: error.message || 'Could not read the image file. Please try another image.',
             variant: 'destructive',
           });
           return;
@@ -154,7 +167,7 @@ export default function Home() {
           description: response.error,
           variant: 'destructive',
         });
-        setResults(null);
+        setResults(null); // Ensure results are cleared on failure
       } else if (response.data) {
         setResults(response.data);
       }
