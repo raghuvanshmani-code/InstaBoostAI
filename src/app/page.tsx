@@ -17,15 +17,6 @@ import AnalyticsCharts from './components/analytics-charts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CopyButton } from '@/app/components/copy-button';
-import { validateImage, processImageForUpload } from '@/lib/image-utils';
-
-const toDataURL = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
 
 const strategyData = [
     {
@@ -86,7 +77,6 @@ export default function Home() {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [results, setResults] = useState<AIResults | null>(null);
   const [tone, setTone] = useState('casual');
@@ -95,65 +85,12 @@ export default function Home() {
 
   const sampleImages = PlaceHolderImages.filter(p => p.id.startsWith('sample-'));
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-image-1');
-
-  const handleFileChange = (file: File | null) => {
-    if (file) {
-      const error = validateImage(file);
-      if (error) {
-        toast({ title: 'Upload Error', description: error, variant: 'destructive' });
-        return;
-      }
-      
-      setImageFile(file);
-      const preview = URL.createObjectURL(file);
-      setImagePreview(preview);
-      setResults(null); // Clear previous results on new image selection
-    } else {
-      setImageFile(null);
-      setImagePreview(null);
-    }
-  };
   
-  const handleGenerateClick = () => {
-    if (imageFile) {
-      handleGenerate(imageFile);
-    } else if (imagePreview) {
-      // This handles the case where a sample image was clicked
-      handleGenerate(imagePreview);
-    } else {
-      toast({
-        title: 'No Image Selected',
-        description: 'Please select an image before generating content.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleGenerate = async (fileOrUrl: File | string) => {
+  const handleGenerate = async (imageUri: string) => {
     setResults(null); // Clear previous results
+    setImagePreview(imageUri); // Set preview for results panel
     
     startTransition(async () => {
-      let imageUri: string;
-
-      if (typeof fileOrUrl === 'string') {
-        // It's a URL from a sample image
-        imageUri = fileOrUrl;
-        if (!imagePreview) setImagePreview(fileOrUrl);
-      } else {
-        // It's a file from user upload
-        try {
-          const processedImage = await processImageForUpload(fileOrUrl);
-          imageUri = await toDataURL(processedImage);
-        } catch (error: any) {
-          toast({
-            title: 'Image Processing Error',
-            description: error.message || 'Could not read the image file. Please try another image.',
-            variant: 'destructive',
-          });
-          return;
-        }
-      }
-
       const response = await generateAllSuggestions({
         imageUri,
         tone,
@@ -168,24 +105,11 @@ export default function Home() {
           variant: 'destructive',
         });
         setResults(null); // Ensure results are cleared on failure
+        // Keep imagePreview so the user can see what they uploaded
       } else if (response.data) {
         setResults(response.data);
       }
     });
-  };
-
-  const handleSampleImageClick = async (imageUrl: string) => {
-    // Set preview immediately
-    setImagePreview(imageUrl);
-    setResults(null); // Clear previous results
-    
-    // Set a placeholder File object, since some logic depends on it.
-    // The actual generation will use the URL.
-    const sampleFile = new File([], "sample.jpg", {type: "image/jpeg"});
-    setImageFile(sampleFile);
-
-    // Directly trigger generation with the image URL
-    handleGenerate(imageUrl);
   };
 
 
@@ -279,9 +203,7 @@ export default function Home() {
                   </div>
                   <div className="md:col-span-2">
                     <ContentPanel
-                      onFileChange={handleFileChange}
                       isLoading={isPending}
-                      onSampleClick={handleSampleImageClick}
                       sampleImages={sampleImages}
                       tone={tone}
                       onToneChange={setTone}
@@ -289,9 +211,7 @@ export default function Home() {
                       onLanguageChange={setLanguage}
                       customInstructions={customInstructions}
                       onCustomInstructionsChange={setCustomInstructions}
-                      onGenerateClick={handleGenerateClick}
-                      imageSelected={!!imagePreview}
-                      imagePreview={imagePreview}
+                      onGenerate={handleGenerate}
                     />
                   </div>
               </div>

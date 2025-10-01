@@ -3,7 +3,7 @@
 
 import { useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { BrainCircuit, CheckCircle, Languages, Upload, WandSparkles } from 'lucide-react';
+import { BrainCircuit, CheckCircle, Languages, Upload, WandSparkles, X } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
@@ -17,11 +17,11 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { validateImage, processImageForUpload } from '@/lib/image-utils';
 
 type ContentPanelProps = {
-  onFileChange: (file: File | null) => void;
   isLoading: boolean;
-  onSampleClick: (imageUrl: string) => void;
   sampleImages: ImagePlaceholder[];
   tone: string;
   onToneChange: (tone: string) => void;
@@ -29,15 +29,19 @@ type ContentPanelProps = {
   onLanguageChange: (language: string) => void;
   customInstructions: string;
   onCustomInstructionsChange: (instructions: string) => void;
-  onGenerateClick: () => void;
-  imageSelected: boolean;
-  imagePreview: string | null;
+  onGenerate: (imageUri: string) => void;
 };
 
+const toDataURL = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+
 export default function ContentPanel({
-  onFileChange,
   isLoading,
-  onSampleClick,
   sampleImages,
   tone,
   onToneChange,
@@ -45,12 +49,14 @@ export default function ContentPanel({
   onLanguageChange,
   customInstructions,
   onCustomInstructionsChange,
-  onGenerateClick,
-  imageSelected,
-  imagePreview,
+  onGenerate,
 }: ContentPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  
 
   const handleFileSelect = () => {
     if (isLoading) return;
@@ -82,9 +88,72 @@ export default function ContentPanel({
     setIsDragging(false);
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
-      onFileChange(files[0]);
+      handleFileChange(files[0]);
     }
   };
+
+  const handleFileChange = (file: File | null) => {
+    if (!file) {
+      setImageFile(null);
+      setImagePreview(null);
+      return;
+    }
+
+    const error = validateImage(file);
+    if (error) {
+      toast({ title: 'Upload Error', description: error, variant: 'destructive' });
+      return;
+    }
+    
+    setImageFile(file);
+    const preview = URL.createObjectURL(file);
+    setImagePreview(preview);
+  };
+
+  const handleClearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleGenerateClick = async () => {
+    let imageUri: string;
+    
+    if (imageFile) {
+       try {
+        const processedImage = await processImageForUpload(imageFile);
+        imageUri = await toDataURL(processedImage);
+      } catch (error: any) {
+        toast({
+          title: 'Image Processing Error',
+          description: error.message || 'Could not read the image file. Please try another image.',
+          variant: 'destructive',
+        });
+        return;
+      }
+    } else if (imagePreview) {
+      // This handles the case where a sample image was clicked and is a URL
+      imageUri = imagePreview;
+    } else {
+      toast({
+        title: 'No Image Selected',
+        description: 'Please select an image before generating content.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    onGenerate(imageUri);
+  };
+  
+  const handleSampleClick = (imageUrl: string) => {
+    if (isLoading) return;
+    setImageFile(null); // Clear any uploaded file
+    setImagePreview(imageUrl);
+    onGenerate(imageUrl); // Directly trigger generation
+  };
+
 
   return (
     <Card className="w-full shadow-2xl">
@@ -93,13 +162,12 @@ export default function ContentPanel({
           className={cn(
             'relative group flex h-64 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-background transition-colors',
             isDragging ? 'border-primary bg-primary/10' : 'hover:border-primary/50',
-            isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+            isLoading ? 'cursor-not-allowed opacity-50' : ''
           )}
-          onClick={handleFileSelect}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
-          onDrop={handleDrop}
+  onDrop={handleDrop}
         >
           {isLoading ? (
             <div className="flex flex-col items-center gap-4 text-center">
@@ -107,21 +175,33 @@ export default function ContentPanel({
                 <p className="font-semibold text-lg text-foreground">Generating ideas...</p>
                 <p className="text-sm text-muted-foreground">Please wait a moment.</p>
             </div>
-          ) : imagePreview && imageSelected ? (
-             <div className='relative w-full h-full'>
+          ) : imagePreview ? (
+             <div className='relative w-full h-full' onClick={!isLoading ? handleFileSelect : undefined} style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}>
                 <Image src={imagePreview} alt="Selected preview" fill className="object-contain rounded-lg" />
                  <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <CheckCircle className="h-12 w-12 text-white" />
                     <p className="text-white font-semibold mt-2">Image Selected</p>
                     <p className="text-white/80 text-sm">Click to change</p>
                 </div>
+                 <Button
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2 h-7 w-7 rounded-full z-10 opacity-80 hover:opacity-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClearImage();
+                  }}
+                  aria-label="Remove image"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-4 text-center text-muted-foreground">
+            <div className="flex flex-col items-center gap-4 text-center text-muted-foreground cursor-pointer" onClick={handleFileSelect}>
               <Upload className="h-12 w-12" />
               <div>
                 <p className="font-semibold text-lg text-foreground">Click to upload or drag and drop</p>
-                <p className="text-sm">SVG, PNG, JPG or GIF</p>
+                <p className="text-sm">SVG, PNG, JPG or GIF (max 10MB)</p>
               </div>
             </div>
           )}
@@ -131,7 +211,7 @@ export default function ContentPanel({
             id="content-upload"
             className="hidden"
             accept="image/*"
-            onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
+            onChange={(e) => handleFileChange(e.target.files ? e.target.files[0] : null)}
             disabled={isLoading}
           />
         </div>
@@ -190,8 +270,8 @@ export default function ContentPanel({
         </div>
 
         <Button
-            onClick={onGenerateClick}
-            disabled={isLoading || !imageSelected}
+            onClick={handleGenerateClick}
+            disabled={isLoading || !imagePreview}
             size="lg"
             className="w-full text-lg"
         >
@@ -211,7 +291,7 @@ export default function ContentPanel({
                 <button
                   key={sample.id}
                   className="relative aspect-square w-full rounded-md overflow-hidden group/sample disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => onSampleClick(sample.imageUrl)}
+                  onClick={() => handleSampleClick(sample.imageUrl)}
                   disabled={isLoading}
                 >
                   <Image
