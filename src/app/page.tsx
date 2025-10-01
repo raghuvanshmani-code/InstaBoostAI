@@ -11,9 +11,12 @@ import { generateAllSuggestions } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import AnalyticsCharts from './components/analytics-charts';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { CopyButton } from '@/app/components/copy-button';
 
 const toDataURL = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -27,17 +30,17 @@ const strategyData = [
     {
         icon: BrainCircuit,
         title: 'Deep Content Analysis',
-        description: 'Our AI goes beyond keywords, analyzing image context, objects, and sentiment to craft a narrative that resonates with your audience.',
+        description: 'Our AI analyzes image context, objects, and sentiment to craft a narrative that resonates.',
     },
     {
         icon: TrendingUp,
-        title: 'Data-Driven Hashtags',
-        description: 'We synthesize real-time trends and performance data to recommend hashtags that maximize reach and connect you with engaged communities.',
+        title: 'Trend-Aware Hashtags',
+        description: 'We recommend hashtags that can connect you with engaged communities.',
     },
     {
         icon: Sparkles,
         title: 'Creative Captioning',
-        description: 'Generate a variety of creative, attention-grabbing captions in different tones, optimized to spark conversation and drive engagement.',
+        description: 'Generate a variety of creative captions in different tones to spark conversation.',
     },
 ];
 
@@ -61,6 +64,21 @@ const testimonials = [
         comment: 'The quality of the content analysis is stunning. It picks up on nuances in my photos that I would have missed, leading to much richer descriptions.',
     },
 ];
+
+const sampleOutput = {
+  captions: [
+    "Just me, my board, and the open road. 🛹 Sometimes the simplest moments are the most profound. Where's your favorite place to skate?",
+    "Golden hour vibes and concrete waves. ✨ There's nothing quite like the feeling of freedom with wheels under your feet.",
+    "Riding into the sunset. This view never gets old. What's your favorite way to end the day? 🌅",
+  ],
+  hashtags: [
+    { tag: '#skatelife', reach: 85 },
+    { tag: '#sunsetskate', reach: 70 },
+    { tag: '#longboarding', reach: 75 },
+    { tag: '#goldenhour', reach: 90 },
+    { tag: '#chasinglight', reach: 60 },
+  ]
+};
 
 
 export default function Home() {
@@ -176,53 +194,91 @@ export default function Home() {
         ) : (
           <>
             <div className="container mx-auto p-4 py-8 md:py-12">
-              <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-                <div className="flex flex-col items-start gap-4">
+               <div className="text-center mb-10">
                   <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
                     Unlock Your Social Media Potential
                   </h1>
-                  <p className="text-lg text-muted-foreground md:text-xl">
-                    From a single image, generate viral captions, strategic hashtags, and engaging post ideas in seconds.
+                  <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground md:text-xl">
+                    From a single image, get viral captions, strategic hashtags, and engaging post ideas in seconds.
                   </p>
-                  <div className="relative mt-4 w-full aspect-video rounded-xl overflow-hidden shadow-2xl">
-                      {heroImage && (
-                          <Image
-                              src={heroImage.imageUrl}
-                              alt={heroImage.description}
-                              fill
-                              className="object-cover"
-                              data-ai-hint={heroImage.imageHint}
-                              priority
-                          />
-                      )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-0 left-0 p-6">
-                      <h3 className="text-2xl font-bold text-white">
-                        Effortless Content Creation
-                      </h3>
-                      <p className="mt-2 text-lg text-white/90">
-                        Upload your image and let our AI do the heavy lifting.
-                      </p>
-                    </div>
+                </div>
+
+              <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+                <div className="relative w-full aspect-square rounded-xl overflow-hidden shadow-2xl">
+                    {heroImage && (
+                        <Image
+                            src={heroImage.imageUrl}
+                            alt={heroImage.description}
+                            fill
+                            className="object-cover"
+                            data-ai-hint={heroImage.imageHint}
+                            priority
+                        />
+                    )}
+                </div>
+                <div className="flex flex-col gap-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Example Captions</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {sampleOutput.captions.map((caption, i) => (
+                           <div key={i} className="flex justify-between items-start gap-2 p-3 rounded-lg bg-background border text-sm">
+                              <p className="flex-grow">{caption}</p>
+                              <CopyButton textToCopy={caption} size="sm" />
+                            </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                     <Card>
+                      <CardHeader>
+                        <CardTitle>Example Hashtags</CardTitle>
+                      </CardHeader>
+                      <CardContent className="flex flex-wrap gap-2">
+                        {sampleOutput.hashtags.map((h, i) => (
+                          <Badge key={i} variant="secondary" className="text-sm">{h.tag}</Badge>
+                        ))}
+                      </CardContent>
+                    </Card>
+                    <Button 
+                      size="lg"
+                      onClick={() => document.getElementById('content-panel')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="mt-4 w-full md:w-auto self-center"
+                    >
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Generate Your Own
+                    </Button>
+                </div>
+              </div>
+            </div>
+
+            <div id="content-panel" className="w-full max-w-6xl mx-auto py-12 md:py-24">
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                  <div className="md:col-span-1 flex flex-col items-start text-center md:text-left">
+                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Create Your Post</h2>
+                     <p className="mt-4 text-lg text-muted-foreground">
+                       1. Upload an image. <br/>
+                       2. Customize the tone. <br/>
+                       3. Generate content!
+                     </p>
                   </div>
-                </div>
-                <div className="flex items-center justify-center">
-                  <ContentPanel
-                    onFileChange={handleFileChange}
-                    isLoading={isPending}
-                    onSampleClick={handleSampleImageClick}
-                    sampleImages={sampleImages}
-                    tone={tone}
-                    onToneChange={setTone}
-                    language={language}
-                    onLanguageChange={setLanguage}
-                    customInstructions={customInstructions}
-                    onCustomInstructionsChange={setCustomInstructions}
-                    onGenerateClick={handleGenerateClick}
-                    imageSelected={!!imagePreview}
-                    imagePreview={imagePreview}
-                  />
-                </div>
+                  <div className="md:col-span-2">
+                    <ContentPanel
+                      onFileChange={handleFileChange}
+                      isLoading={isPending}
+                      onSampleClick={handleSampleImageClick}
+                      sampleImages={sampleImages}
+                      tone={tone}
+                      onToneChange={setTone}
+                      language={language}
+                      onLanguageChange={setLanguage}
+                      customInstructions={customInstructions}
+                      onCustomInstructionsChange={setCustomInstructions}
+                      onGenerateClick={handleGenerateClick}
+                      imageSelected={!!imagePreview}
+                      imagePreview={imagePreview}
+                    />
+                  </div>
               </div>
             </div>
             
@@ -230,7 +286,7 @@ export default function Home() {
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">The Strategy Behind the Magic</h2>
-                        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">We combine deep analysis with real-time data to give your content an unfair advantage.</p>
+                        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">We combine deep analysis with creative prompting to give your content an edge.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {strategyData.map((item, index) => (
@@ -298,3 +354,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

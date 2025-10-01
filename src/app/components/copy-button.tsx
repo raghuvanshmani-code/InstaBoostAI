@@ -1,12 +1,19 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, type ButtonProps } from '@/components/ui/button';
 import { Check, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-export function CopyButton({ textToCopy, className }: { textToCopy: string; className?: string }) {
+type CopyButtonProps = {
+  textToCopy: string;
+  className?: string;
+  size?: ButtonProps['size'];
+}
+
+export function CopyButton({ textToCopy, className, size = "icon" }: CopyButtonProps) {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -31,9 +38,12 @@ export function CopyButton({ textToCopy, className }: { textToCopy: string; clas
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size={size}
             onClick={handleCopy}
-            className={cn('h-8 w-8 text-muted-foreground hover:text-foreground', className)}
+            className={cn('text-muted-foreground hover:text-foreground', 
+              size === 'icon' && 'h-8 w-8',
+              className
+            )}
             aria-label="Copy to clipboard"
           >
             {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
@@ -46,3 +56,5 @@ export function CopyButton({ textToCopy, className }: { textToCopy: string; clas
     </TooltipProvider>
   );
 }
+
+    
