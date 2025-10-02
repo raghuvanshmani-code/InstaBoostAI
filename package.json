@@ -1,21 +1,15 @@
 {
-  "name": "InstaBoostAI",
-  "version": "1.0.0",
+  "name": "nextn",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "next build && next export",
+    "build": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "deploy": "gh-pages -d out"
-  },
-   "homepage": "https://raghuvanshmani-code.github.io/InstaBoostAI",
-  "devDependencies": {
-    "gh-pages": "^5.0.0",
-    "typescript": "^5.1.6"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.20.0",
